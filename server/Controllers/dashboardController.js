@@ -1,12 +1,8 @@
 //대시보드 비즈니스 로직을 처리
-const path = require('path'); //디렉토리 경로를 다루는 기본 모듈
-const upload = require('../community/JS/DashBoard/features/multerConfig');
-const PostService = require('../community/JS/DashBoard/features/PostService');
+const {postsUpload} = require('../Service/multerConfig');
+const PostService = require('../Service/PostService');
 
-//게시글 목록 조회
-exports.getDashboard = (req, res) => {
-    res.sendFile(path.join(__dirname, '../community/HTML', 'DashBoard.html'));
-}
+
 
 //게시글 목록 조회 - 데이터 조회
 exports.getDashboardData = async(req,res) => {
@@ -24,16 +20,6 @@ exports.getDashboardData = async(req,res) => {
         console.error('Error fetching dashboard data:', error);
         return res.status(500).json({message : 'internal_server_error'});
     }
-}
-
-//게시글 작성
-exports.getWritePost = (req, res) => {
-    res.sendFile(path.join(__dirname, '../community/HTML', 'AddPost.html'));
-}
-
-//게시글 상세 조회
-exports.getPost = (req, res) => {
-    res.sendFile(path.join(__dirname, '../community/HTML', 'ViewPost.html'));
 }
 
 //게시글 상세 조회 - 데이터 조회
@@ -65,7 +51,7 @@ exports.getPostData = async (req,res) => {
 
 //게시글 추가
 //NOTE: 미들웨어+요청처리 -> 배열로 순서대로 처리
-exports.postAddPost = [upload.single('image'),(req,res) => {
+exports.postAddPost = [postsUpload.single('image'),(req,res) => {
     const {title, content, name, user_id} = req.body;
 
     if (!title || !content || !user_id) {
@@ -90,6 +76,40 @@ exports.postAddPost = [upload.single('image'),(req,res) => {
         console.error('Error creating post:', error);
         return res.status(500).json({ message: 'server_error' });
     }
+}];
+
+
+//게시글 수정 요청
+exports.patchEditPost = [postsUpload.single('image'),async(req, res) => {
+    const {post_id} = req.params;
+    const {title, content} = req.body;
+
+    try{
+        //이미지가 있을경우
+        if(req.file){
+            //기존 이미지 삭제
+            await PostService.deleteImage(post_id);
+        }
+
+        //게시글 수정
+        const post = PostService.patchPost(post_id,{
+            title,
+            content,
+            image: req.file ? req.file.filename: undefined
+        });
+
+        if(!post){
+            return res.status(404).json({message: 'post_not_found'});
+        }
+
+        //수정완료. send로 응답 보내기.
+        return res.status(204).send();
+
+    }catch(error){
+        console.error('Error patching post:', error);
+        return res.status(500).json({message: 'internal_server_error'});
+    }
+
 }];
 
 

@@ -3,7 +3,7 @@ const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-const port = 8080;
+const port = 3000;
 
 // form태그-data 파싱
 app.use(express.urlencoded({ extended: true })); 
@@ -13,7 +13,7 @@ app.use(express.json());
 
 //cors 미들웨어 설정
 app.use(cors({
-  origin : 'http://localhost:3000', //프론트 서버 주소
+  origin : 'http://localhost:8080', //프론트 서버 주소
   credentials : true
 }));
 
@@ -30,9 +30,9 @@ app.use(session({
   }));
 
 //라우트 설정
-const authRoutes = require('./routes/authRoutes'); //폴더 경로
-const dashboardRoutes = require('./routes/dashboardRoutes');
-const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./server/routes/authRoutes'); //폴더 경로
+const dashboardRoutes = require('./server/routes/dashboardRoutes');
+const userRoutes = require('./server/routes/userRoutes');
 
 
 app.use('/api/v1/auth',authRoutes);
@@ -41,4 +41,4 @@ app.use('/api/v1/users',userRoutes);
 
 
 app.listen(port, function () {
-    console.log(`Server is running on http://localhost:${port}/api/v1/auth/login`)});
+    console.log(`Backend Server is running`)});

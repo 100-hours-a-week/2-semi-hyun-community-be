@@ -32,9 +32,9 @@ const createMulter = (uploadPath) => {
 }
 
 // 게시글 업로드
-const postsUpload = createMulter('community/images');
+const postsUpload = createMulter('server/data/images');
 
 // 프로필 업로드
-const profileUpload = createMulter('community/images/profile');
+const profileUpload = createMulter('server/data/images/profile');
 
 module.exports = {postsUpload, profileUpload};

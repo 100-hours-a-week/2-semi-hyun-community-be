@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { patch } = require('../../../../routes/authRoutes');
-const rootDir = path.resolve(__dirname,'../','../','../');
-const userFilePath = path.join(rootDir,'data/login.json'); //../에서 .../로
+const rootDir = path.resolve(__dirname,'../');
+const userFilePath = path.join(rootDir,'data/json/login.json'); //폴더 경로 변경으로 수정
 
 //json 저장 로직 : 모든 데이터를 로드 -> 특정 데이터 find 
 //-> 데이터 수정 -> 수정한 데이터로 덮기

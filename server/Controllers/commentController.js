@@ -1,5 +1,4 @@
-const path = require('path'); //디렉토리 경로를 다루는 기본 모듈
-const PostService = require('../community/JS/DashBoard/features/PostService');
+const PostService = require('../Service/PostService');
 
 //댓글추가
 exports.addComment = async (req,res)=> {

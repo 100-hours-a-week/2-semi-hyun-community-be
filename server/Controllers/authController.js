@@ -1,4 +1,3 @@
-const path = require('path');
 const SignUp = require('../Service/SignUpJson');
 const TimeStamp = require('../Service/TimeStamp');
 const { v4 } = require('uuid');
@@ -45,7 +44,6 @@ exports.postLogin = async (req, res) => {
         req.session.user = sessionData;
 
         //FIXME : 사용자 json 데이터 업데이트 -> 지금은 시간만 업데이트 하면 되서 안함
-        // 타임스탬프 생성
         // const updated_at = TimeStamp.getTime();
 
         res.status(200).json({

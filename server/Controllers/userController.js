@@ -1,22 +1,12 @@
 const path = require('path');
-const upload = require('../../community/JS/DashBoard/features/multerConfig');
-const UserService = require('../../community/JS/Users/features/UserService');
+const {profileUpload} = require('../Service/multerConfig');
+const UserService = require('../Service/UserService');
 
-//회원정보 수정(닉네임,사진) : 페이지 로드
-exports.getEditUser = (req,res) => {
-    res.sendFile(path.join(__dirname, '../../community/HTML', 'EditProfile.html'));
-}
-
-//회원정보 수정(패스워드) :페이지 로드
-exports.getEditPassword = (req,res) => {
-    res.sendFile(path.join(__dirname, '../../community/HTML', 'EditPassword.html'));
-}
 
 // 회원정보 수정(닉네임,사진): 데이터 조회
 exports.getEditUserData = async(req,res) => {
     try{   
         const user_id = req.user.user_id;
-        // console.log(user_id);
         const user = await UserService.getUserById(user_id);
 
         if(!user){
@@ -35,7 +25,7 @@ exports.getEditUserData = async(req,res) => {
 }
 
 //회원정보 수정 : 닉네임,사진
-exports.patchUserInfo = [upload.single('image'),async(req,res) => {
+exports.patchUserInfo = [profileUpload.single('image'),async(req,res) => {
     const user_id = req.user.user_id; //user_id from session
     const {name} = req.body;
 
