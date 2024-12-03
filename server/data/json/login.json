@@ -1,0 +1,35 @@
+[
+  {
+    "name": "a",
+    "email": "a@naver.com",
+    "password": "a",
+    "user_id": "89d215c6-ae83-4da3-b61d-f578487f3bde",
+    "created_date": "2024-11-19T06:06:48.473Z",
+    "updated_date": "2024-11-19T06:06:48.473Z"
+  },
+  {
+    "user_id": "20986d23-9100-4e13-9b1b-32488a872ab3",
+    "name": "c",
+    "email": "c@naver.com",
+    "password": "c",
+    "created_date": "2024-11-19T07:49:15.389Z",
+    "updated_date": "2024-11-19T07:49:15.389Z"
+  },
+  {
+    "user_id": "7432dfa9-a5b3-40fe-a464-013991e5cacf",
+    "name": "D",
+    "email": "d@naver.com",
+    "password": "d",
+    "created_date": "2024-11-21T04:26:11.139Z",
+    "updated_date": "2024-11-21T04:26:11.139Z"
+  },
+  {
+    "user_id": "d1661cef-56ba-47f5-a556-656f56d40db0",
+    "name": "b",
+    "email": "b@naver.com",
+    "password": "b",
+    "image": "1733141184088-patch.png",
+    "created_date": "2024-12-02T12:06:24.099Z",
+    "updated_date": "2024-12-02T12:06:24.099Z"
+  }
+]

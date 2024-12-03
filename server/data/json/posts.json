@@ -1,0 +1,25 @@
+[
+  {
+    "post_id": "",
+    "title": "first",
+    "content": "test",
+    "image": "test",
+    "user_id": "test",
+    "created_date": "test",
+    "updated_date": "test",
+    "views": "100",
+    "likes": "10",
+    "comments_count": "3",
+    "profile_image_path": "",
+    "comments": [
+      {
+        "comment_id": "",
+        "user_id": "",
+        "post_id": "",
+        "content": "",
+        "created_date": "",
+        "updated_date": ""
+      }
+    ]
+  }
+]
