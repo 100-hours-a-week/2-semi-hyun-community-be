@@ -46,9 +46,18 @@ exports.postLogin = async (req, res) => {
         //FIXME : 사용자 json 데이터 업데이트 -> 지금은 시간만 업데이트 하면 되서 안함
         // const updated_at = TimeStamp.getTime();
 
-        res.status(200).json({
-            message: '로그인을 성공했습니다.',
-            data: { name: user.name, user_id: user.user_id }
+        //[Update] 세션 저장 후 응답
+        req.session.save((err)=>{
+            if(err){
+                console.error('세션 저장 중 오류 발생:', err);
+                return res.status(500).json({message: '세션 저장 중 오류가 발생했습니다.'});
+            }
+
+            res.status(200).json({
+                message: '로그인을 성공했습니다.',
+                data: { name: user.name, user_id: user.user_id }
+            });
+
         });
 
     } catch (error) {
@@ -120,7 +129,7 @@ exports.postLogout = (req,res) => {
     
     //세션이 있을경우
     if(req.user){
-        //destory:비동기작업
+        //destroy:비동기작업
         req.user.destroy(err => {
             if(err){
                 return res.status(500).json({message: '로그아웃 처리 중 오류가 발생했습니다.'});
@@ -130,7 +139,6 @@ exports.postLogout = (req,res) => {
         //세션 쿠키 제거
         //NOTE : connect: 세션 미들웨어 이름 / sid: session id 
         res.clearCookie('connect.sid');
-
         return res.status(200).json({message : '로그아웃 되었습니다'});
     }
     else{
