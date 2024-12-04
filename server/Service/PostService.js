@@ -42,9 +42,6 @@ const getPosts = (offset, limit) => {
 //게시글 추가
 //NOTE: {} : 객체 구조 분해 -> 매개변수 순서가 자유롭다. 기본값 설정이 쉽다.
 const addPost = ({ title, content, name, user_id, imageFilename = '' }) => {
-    console.log('addPost 호출');
-    console.log(title, content, user_id, imageFilename);
-
     const posts = getAllPosts();
     
     //NOTE: 이미지 경로 설정 제외. 정보보안이슈

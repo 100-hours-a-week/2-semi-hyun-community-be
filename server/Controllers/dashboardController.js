@@ -51,15 +51,16 @@ exports.getPostData = async (req,res) => {
 
 //게시글 추가
 //NOTE: 미들웨어+요청처리 -> 배열로 순서대로 처리
-exports.postAddPost = [postsUpload.single('image'),(req,res) => {
+exports.postAddPost = [postsUpload.single('image'), async(req,res) => {
     const {title, content, name, user_id} = req.body;
 
+    //FIXME: 입력타입 검증
     if (!title || !content || !user_id) {
         return res.status(400).json({ message: 'missing_required_fields' });
     }
 
     try{
-        const newPost = PostService.addPost({
+        const newPost = await PostService.addPost({
             title,
             content,
             name,

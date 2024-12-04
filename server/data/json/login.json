@@ -3,6 +3,7 @@
     "name": "a",
     "email": "a@naver.com",
     "password": "a",
+    "image": "",
     "user_id": "89d215c6-ae83-4da3-b61d-f578487f3bde",
     "created_date": "2024-11-19T06:06:48.473Z",
     "updated_date": "2024-11-19T06:06:48.473Z"
@@ -12,6 +13,7 @@
     "name": "c",
     "email": "c@naver.com",
     "password": "c",
+    "image": "",
     "created_date": "2024-11-19T07:49:15.389Z",
     "updated_date": "2024-11-19T07:49:15.389Z"
   },
@@ -31,5 +33,23 @@
     "image": "1733141184088-patch.png",
     "created_date": "2024-12-02T12:06:24.099Z",
     "updated_date": "2024-12-02T12:06:24.099Z"
+  },
+  {
+    "user_id": "49094a78-4409-48f4-ab3b-8c6400942bb9",
+    "name": "이요이요",
+    "email": "e@naver.com",
+    "password": "e",
+    "image": "1733236170021-image.png",
+    "created_date": "2024-12-03T14:29:30.025Z",
+    "updated_date": "2024-12-04T02:35:00.030Z"
+  },
+  {
+    "user_id": "021b3fd8-6f5f-4500-a093-e01b06613b60",
+    "name": "pro",
+    "email": "pro@naver.com",
+    "password": "pro",
+    "image": "1733242812831-profile2.png",
+    "created_date": "2024-12-03T16:20:12.839Z",
+    "updated_date": "2024-12-03T16:20:12.839Z"
   }
 ]
