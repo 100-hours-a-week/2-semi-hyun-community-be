@@ -3,6 +3,16 @@ const {profileUpload} = require('../Service/multerConfig');
 const UserService = require('../Service/UserService');
 
 
+//프로필 이미지 조회
+exports.getHeaderImage = async(req,res) => {
+    const user_id = req.user.user_id;
+    const user = await UserService.getUserById(user_id);
+
+    return res.status(200).json({
+        image: user.image ? user.image : ''
+    });
+}
+
 // 회원정보 수정(닉네임,사진): 데이터 조회
 exports.getEditUserData = async(req,res) => {
     try{   
@@ -14,7 +24,7 @@ exports.getEditUserData = async(req,res) => {
         }
 
         return res.status(200).json({
-            data: { name: user.name, email: user.email },
+            data: { name: user.name, email: user.email, image:user.image},
             message: 'get user data success'
         });
     } catch(error){
@@ -62,6 +72,10 @@ exports.patchPassword = async(req,res) => {
     const {password} = req.body;
 
     try{
+
+        if(!password){
+            return res.status(400).json({message:'password_required'});
+        }
 
         //유저 정보 수정
         const user = await UserService.patchPassword(user_id,password);
