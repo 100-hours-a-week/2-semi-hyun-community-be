@@ -46,7 +46,30 @@ const getUserById = (user_id) => {
     return user;
 }
 
-//사진 삭제
+//프로필 삭제.
+const deleteProfileImage = async(user_id) => {
+    //게시글 정보 가져오기
+    const users = getAllUsers();
+    const user = users.find(user => user.user_id === user_id);
+
+    if (!user || !user.image) {
+        return false;
+    }
+
+    const imagePath = path.join(rootDir,'data/images/profile/',user.image);
+
+    try{
+
+        //NOTE : unlink is using the callback-based API. not the promise-based API.
+        console.log(imagePath);
+        await fs.promises.unlink(imagePath);
+        console.log('프로필 삭제 완료');
+        return true;
+    }catch(error){
+        console.error('Error deleting image:', error);
+        return false;
+    }
+}
 
 //회원 정보 수정
 const patchPost = async (user_id,userdata) => {
@@ -71,6 +94,7 @@ const patchPost = async (user_id,userdata) => {
     return true;
 }
 
+//비밀번호 수정
 const patchPassword = async (user_id,password) => {
     const users = getAllUsers();
     const userIndex = users.findIndex(user => user.user_id === user_id);
@@ -94,6 +118,7 @@ const patchPassword = async (user_id,password) => {
 
 module.exports ={
     getUserById,
+    deleteProfileImage,
     patchPost,
     patchPassword
 }

@@ -3,14 +3,22 @@ const {profileUpload} = require('../Service/multerConfig');
 const UserService = require('../Service/UserService');
 
 
+//이미지 조회
+const getImage = async(user_id) => {
+    const user = await UserService.getUserById(user_id);
+    return user.image ? user.image : '';
+}
+
+//게시글 목록 조회: 프로필 이미지 조회
+exports.getProfileImage = async(req,res) => {
+    const image = await getImage(req.params.user_id);
+    return res.status(200).json({image});
+}
+
 //프로필 이미지 조회
 exports.getHeaderImage = async(req,res) => {
-    const user_id = req.user.user_id;
-    const user = await UserService.getUserById(user_id);
-
-    return res.status(200).json({
-        image: user.image ? user.image : ''
-    });
+    const image = await getImage(req.user.user_id);
+    return res.status(200).json({image});
 }
 
 // 회원정보 수정(닉네임,사진): 데이터 조회
@@ -36,14 +44,15 @@ exports.getEditUserData = async(req,res) => {
 
 //회원정보 수정 : 닉네임,사진
 exports.patchUserInfo = [profileUpload.single('image'),async(req,res) => {
-    const user_id = req.user.user_id; //user_id from session
+    const user_id = req.session.user.user_id; //user_id from session
     const {name} = req.body;
 
     try{
         //사진이 있을 경우
         if(req.file){
+
             // 기존 프로필 삭제
-            // await UserService.deleteProfile();
+            await UserService.deleteProfileImage(user_id);
         }
 
         //유저 정보 수정

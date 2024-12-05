@@ -3,6 +3,9 @@ const router = express.Router();
 const authMiddleware = require('../Middlewares/authMiddleware');
 const userController = require('../Controllers/userController');
 
+//프로필 사진 조회
+router.get('/:user_id/profile', authMiddleware, userController.getProfileImage);
+
 //회원정보 수정(닉네임) 데이터 조회
 router.get('/me/data', authMiddleware, userController.getEditUserData);
 
