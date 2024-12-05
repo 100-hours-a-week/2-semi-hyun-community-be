@@ -178,6 +178,7 @@ const addComment = async(post_id, comment) => {
         comment_id : Date.now().toString(),
         user_id: comment.user_id,
         post_id,
+        name: posts[postIndex].name, //FIXME 원래 로컬스토리지에서 가져옴 -> 로그인한 닉네임 정보가 출력./ 추후에 user_id로 연결해서 사용
         content: comment.content,
         created_date: new Date().toISOString(),
         updated_date: new Date().toISOString()
