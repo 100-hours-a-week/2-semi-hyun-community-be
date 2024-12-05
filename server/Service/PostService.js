@@ -3,6 +3,22 @@ const path = require('path');
 const rootDir = path.resolve(__dirname,'../'); //NOTE: 절대경로로 해석 -> 상위 디렉토리로 이동
 const postsFilePath = path.join(rootDir,'data/json/posts.json'); //폴더 경로 변경으로 수정
 
+//작성자 권한 확인
+const checkAuthorization = (post_id, user_id, comment_id=null, type = 'post') => {
+    const posts = getAllPosts();
+    if(type === 'post'){
+        const post = posts.find(post => post.post_id === post_id);
+        if (!post) return false;
+        return post.user_id === user_id;
+    }
+    else if(type === 'comment'){
+        const post = posts.find(post => post.post_id === post_id);
+        const comment = post.comments.find(comment => comment.comment_id === comment_id);
+        if (!comment) return false;
+        return comment.user_id === user_id;
+    }
+}
+
 //게시글 저장
 const savePosts = (posts) => {
     try {
@@ -239,6 +255,7 @@ const patchLike = (post_id, like) =>{
 
 
 module.exports = {
+    checkAuthorization,
     addPost,
     getPostById,
     getPosts,
