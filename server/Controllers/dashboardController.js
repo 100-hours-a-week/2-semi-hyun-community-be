@@ -3,6 +3,19 @@ const {postsUpload} = require('../Service/multerConfig');
 const PostService = require('../Service/PostService');
 
 
+//게시글 권한 확인
+exports.checkAuthorization = async(req,res) => {
+    const {post_id} = req.params;
+    const {user_id} = req.session.user;
+
+    const isAuthorized = PostService.checkAuthorization(post_id, user_id);
+    if(!isAuthorized){
+        return res.status(403).json({message : '삭제 권한이 없습니다.'});
+    }
+
+    return res.status(200).json({message : 'success'});
+}
+
 
 //게시글 목록 조회 - 데이터 조회
 exports.getDashboardData = async(req,res) => {
@@ -114,17 +127,25 @@ exports.patchEditPost = [postsUpload.single('image'),async(req, res) => {
 }];
 
 
-//게시글 삭제
+//게시글 삭제 + json 응답 x
 exports.deletePost = async (req,res)=>{
     const { post_id } = req.params;
-
+    const {user_id} = req.session.user;
     try{
-        const result = await PostService.deletePost(post_id);
-        if(!result) {
-            return res.status(404).json({message : 'invalid_post_id'});
+
+        const isAuthorized = PostService.checkAuthorization(post_id, user_id);
+        console.log(isAuthorized);
+        if(!isAuthorized){
+            return res.status(403).json({message : '삭제 권한이 없습니다.'});
         }
 
-        return res.status(204).send();
+
+        const result = await PostService.deletePost(post_id);
+        if(!result) {
+            return res.status(404).json({message : '게시글을 찾을 수 없습니다.'});
+        }
+
+        return res.status(200).json({message : 'delete_success'});
 
     }catch(error){
         console.error('Error deleting post:', error);
