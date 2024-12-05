@@ -5,7 +5,6 @@ const filePath = path.join(rootDir,'data/json/login.json'); //폴더 경로 변�
 
 
 const readUser = () => {
-    console.log("읽기 시작.")
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf8', (err, data) => {
             if (err) {
