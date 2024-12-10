@@ -9,7 +9,8 @@ const createMulter = (uploadPath) => {
         },
         filename: (req, file, cb) => {
             const encodedFilename = encodeURIComponent(file.originalname);
-            cb(null, req.session.user.name + '-' + Date.now() + '-' + encodedFilename);
+            const name = req.session.user ? req.session.user.name : req.body.name;
+            cb(null, `${name}-${Date.now()}-${encodedFilename}`);
         }
     });
 
