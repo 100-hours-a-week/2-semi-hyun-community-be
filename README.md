@@ -1,7 +1,7 @@
 # 2-semi-hyun-community-be
 ## 0. 정리
-[2-semi-hyun-community-fe](https://github.com/100-hours-a-week/2-semi-hyun-community-fe)
-[2-semi-hyun-community-be](https://github.com/100-hours-a-week/2-semi-hyun-community-be)
+- [2-semi-hyun-community-fe](https://github.com/100-hours-a-week/2-semi-hyun-community-fe)
+- [2-semi-hyun-community-be](https://github.com/100-hours-a-week/2-semi-hyun-community-be)
 
 ## 1. 스택
 Node.js, JavaScript
