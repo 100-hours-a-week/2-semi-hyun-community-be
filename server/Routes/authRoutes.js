@@ -6,14 +6,9 @@ const router = express.Router();
 const {profileUpload} = require('../Service/multerConfig');
 const authController = require('../Controllers/authController');
 
-
-
-//로그인 페이지를 클라이언트에 전송
-// router.get('/login', authController.getLogin);
 //로그인 처리 (POST)
 router.post('/login',authController.postLogin);
-//회원가입 페이지 라우트
-// router.get('/signUp',authController.getSignUp);
+
 //회원가입 처리 라우트 (POST)
 router.post('/signUp',profileUpload.single('image'),authController.postSignUp);
 

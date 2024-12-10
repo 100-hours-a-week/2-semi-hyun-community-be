@@ -15,7 +15,7 @@ router.patch('/me/user_info', authMiddleware, userController.patchUserInfo);
 //회원정보 수정 : 패스워드
 router.patch('/me/password', authMiddleware, userController.patchPassword);
 
-//회원정보 삭제
+//회원 탈퇴
 router.delete('/me',authMiddleware, userController.deleteUser);
 
 // 회원정보 수정(비밀번호) 페이지 라우트

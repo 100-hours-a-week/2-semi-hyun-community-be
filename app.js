@@ -35,7 +35,7 @@ app.use(session({
 
 
 //MYSQL 연결
-const db = require('./server/models/db');
+// const db = require('./server/models/db');
 
 
 //로깅 설정
@@ -56,5 +56,5 @@ app.use('/api/v1/users',userRoutes);
 
 
 app.listen(port, function () {
-  console.log(`--서버 시작-- ${new Date().toISOString()} - 포트: ${port}`);
+  console.log(`--Backend Server Start-- ${new Date().toISOString()} - Port: ${port}`);
   });

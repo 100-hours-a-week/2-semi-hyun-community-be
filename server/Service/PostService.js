@@ -151,7 +151,6 @@ const deleteImage = async(post_id) => {
 const deletePost = (post_id) => {
     const posts = getAllPosts();
     const index = posts.findIndex(post => post.post_id === post_id);
-    console.log(`index : ${index}`);
     if(index !== -1){
         posts.splice(index,1);
         savePosts(posts);
