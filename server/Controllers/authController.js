@@ -128,18 +128,19 @@ exports.postSignUp = async (req, res) => {
 exports.postLogout = (req,res) => {
     
     //세션이 있을경우
-    if(req.user){
+    //세션 삭제 완료 후 쿠키 제거
+    if(req.session.user){
         //destroy:비동기작업
-        req.user.destroy(err => {
+        req.session.destroy(err => {
             if(err){
                 return res.status(500).json({message: '로그아웃 처리 중 오류가 발생했습니다.'});
             }
-        });
 
-        //세션 쿠키 제거
-        //NOTE : connect: 세션 미들웨어 이름 / sid: session id 
-        res.clearCookie('connect.sid');
-        return res.status(200).json({message : '로그아웃 되었습니다'});
+            //세션 쿠키 제거
+            //NOTE : connect: 세션 미들웨어 이름 / sid: session id 
+            res.clearCookie('connect.sid');
+            return res.status(200).json({message : '로그아웃 되었습니다'});
+        });
     }
     else{
         return res.status(200).json({message : '이미 로그아웃 되었습니다'});
