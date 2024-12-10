@@ -104,4 +104,39 @@ exports.patchPassword = async(req,res) => {
 }
 
 //회원정보 삭제
-exports.deleteUser = (req,res) => {}
+exports.deleteUser = async(req,res) => {
+    const {user_id} = req.session.user;
+
+    try{
+        //권한 확인
+        const isAuthorized = UserService.checkAuthorization(user_id);
+
+        if(!isAuthorized){
+            return res.status(400).json({message:'삭제 권한이 없습니다.'});
+        }
+
+        //프로필 사진 삭제
+        await UserService.deleteProfileImage(user_id);
+
+        //사용자 삭제
+        const result = await UserService.deleteUser(user_id);
+
+        if(!result){
+            return res.status(404).json({message:'사용자를 찾을 수 없습니다.'});
+        }
+
+
+        await new Promise((resolve, reject) => { 
+            req.session.destroy(err => {
+                if(err) reject(err);
+                else resolve();
+            });
+        });
+        res.clearCookie('connect.sid'); 
+        return res.status(200).json({message:'탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.'});
+
+    }catch(error){
+        console.error('사용자 정보 조회 중 오류 발생:', error);
+        return res.status(500).json({message: '서버 오류가 발생했습니다.'});
+    }
+}

@@ -6,6 +6,16 @@ const userFilePath = path.join(rootDir,'data/json/login.json'); //폴더 경로 
 //json 저장 로직 : 모든 데이터를 로드 -> 특정 데이터 find 
 //-> 데이터 수정 -> 수정한 데이터로 덮기
 
+//사용자 권한 확인
+const checkAuthorization = (user_id) => {
+    const users = getAllUsers();
+    const user = users.find(user => user.user_id === user_id);
+    if (!user) {
+        return false;
+    }
+    return user.user_id === user_id;
+}
+
 //데이터 저장 -> promise로 return
 const saveUsers = async (users) => {
     try{
@@ -46,7 +56,7 @@ const getUserById = (user_id) => {
     return user;
 }
 
-//프로필 삭제.
+//프로필 이미지 삭제.
 const deleteProfileImage = async(user_id) => {
     //게시글 정보 가져오기
     const users = getAllUsers();
@@ -116,9 +126,27 @@ const patchPassword = async (user_id,password) => {
     return true;
 }
 
+//사용자 삭제
+const deleteUser = async (user_id) => {
+    const users = getAllUsers();
+    const userIndex = users.findIndex(user => user.user_id === user_id);
+
+    if(userIndex === -1){
+        return false;
+    }
+    //NOTE : splice(수정시작위치, 삭제할 요소 갯수, 배열에 추가할 새로운 요소)
+    users.splice(userIndex,1);
+    await saveUsers(users);
+
+    return true;
+
+}
+
 module.exports ={
+    checkAuthorization,
     getUserById,
     deleteProfileImage,
+    deleteUser,
     patchPost,
     patchPassword
 }
