@@ -4,6 +4,9 @@
 
 #(+)24.11.18  test 폴더는 제외
 archive/**
+
+# env 파일 제외
+.env
 # User-specific files
 *.suo
 *.user
