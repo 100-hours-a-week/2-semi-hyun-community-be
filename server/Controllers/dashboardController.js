@@ -136,10 +136,12 @@ exports.deletePost = async (req,res)=>{
         const isAuthorized = PostService.checkAuthorization(post_id, user_id);
         console.log(isAuthorized);
         if(!isAuthorized){
-            return res.status(403).json({message : '삭제 권한이 없습니다.'});
+            return res.status(403).json({message : '게시글 작성자만 삭제할 수 있습니다.'});
         }
 
-
+        //게시글 사진 삭제
+        await PostService.deleteImage(post_id);
+        //게시글 삭제
         const result = await PostService.deletePost(post_id);
         if(!result) {
             return res.status(404).json({message : '게시글을 찾을 수 없습니다.'});
