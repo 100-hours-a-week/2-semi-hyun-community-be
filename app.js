@@ -1,3 +1,5 @@
+//환경변수 로드 패키지 + dotenv.config(): 실제로 .env 파일을 읽음
+require('dotenv').config(); 
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
@@ -31,6 +33,17 @@ app.use(session({
     }    
   }));
 
+
+//MYSQL 연결
+const db = require('./server/models/db');
+
+
+//로깅 설정
+const loggingMiddleware = require('./server/Middlewares/loggingMiddleware');
+app.use(loggingMiddleware);
+
+
+
 //라우트 설정
 const authRoutes = require('./server/Routes/authRoutes'); //폴더 경로
 const dashboardRoutes = require('./server/Routes/dashboardRoutes');
@@ -43,4 +56,5 @@ app.use('/api/v1/users',userRoutes);
 
 
 app.listen(port, function () {
-    console.log(`Backend Server is running`)});
+  console.log(`--서버 시작-- ${new Date().toISOString()} - 포트: ${port}`);
+  });
