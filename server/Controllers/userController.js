@@ -1,6 +1,7 @@
 const path = require('path');
 const {profileUpload} = require('../Service/multerConfig');
 const UserService = require('../Service/UserService');
+const PostService = require('../Service/PostService');
 
 
 //이미지 조회
@@ -118,6 +119,8 @@ exports.deleteUser = async(req,res) => {
         //프로필 사진 삭제
         await UserService.deleteProfileImage(user_id);
 
+        //사용자 관련 데이터 삭제
+        await PostService.deleteUserRelatedData(user_id);
         //사용자 삭제
         const result = await UserService.deleteUser(user_id);
 
@@ -132,6 +135,7 @@ exports.deleteUser = async(req,res) => {
                 else resolve();
             });
         });
+        //세션 쿠키 제거
         res.clearCookie('connect.sid'); 
         return res.status(200).json({message:'탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.'});
 
