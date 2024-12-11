@@ -4,8 +4,8 @@ const rootDir = path.resolve(__dirname,'../'); //NOTE: 절대경로로 해석 ->
 const postsFilePath = path.join(rootDir,'data/json/posts.json'); //폴더 경로 변경으로 수정
 
 //작성자 권한 확인
-const checkAuthorization = (post_id, user_id, comment_id=null, type = 'post') => {
-    const posts = getAllPosts();
+const checkAuthorization = async(post_id, user_id, comment_id=null, type = 'post') => {
+    const posts = await getAllPosts();
     if(type === 'post'){
         const post = posts.find(post => post.post_id === post_id);
         if (!post) return false;
@@ -31,12 +31,12 @@ const savePosts = (posts) => {
 };
 
 // 모든 게시글 조회
-const getAllPosts = () => {
+const getAllPosts = async() => {
     try {
         if (!fs.existsSync(postsFilePath)) {
             return [];  // 파일이 없으면 빈 배열 반환
         }
-        const postsData = fs.readFileSync(postsFilePath, 'utf8');
+        const postsData = await fs.promises.readFile(postsFilePath, 'utf8');
         return JSON.parse(postsData);
     } catch (error) {
         console.error('Error reading posts:', error);
@@ -45,21 +45,21 @@ const getAllPosts = () => {
 };
 
 // 특정 게시글 조회
-const getPosts = (offset, limit) => {
-    const posts = getAllPosts();
+const getPosts = async(offset, limit) => {
+    const posts = await getAllPosts();
     //NOTE: 유효한 범위로 제한
     const startIndex = Math.max(0, offset);
     const endIndex = Math.min(posts.length, startIndex + limit);
-    
+
     return posts.slice(startIndex, endIndex);
 }
 
 
 //게시글 추가
 //NOTE: {} : 객체 구조 분해 -> 매개변수 순서가 자유롭다. 기본값 설정이 쉽다.
-const addPost = ({ title, content, name, user_id, imageFilename = '' }) => {
-    const posts = getAllPosts();
-    
+const addPost = async({ title, content, name, user_id, imageFilename = '' }) => {
+    const posts = await getAllPosts();
+
     //NOTE: 이미지 경로 설정 제외. 정보보안이슈
 
     const newPost = {
@@ -85,8 +85,8 @@ const addPost = ({ title, content, name, user_id, imageFilename = '' }) => {
 
 
 // id로 게시글 조회 + 조회수 증가
-const getPostById = (post_id, increaseView = true) => {
-    const posts = getAllPosts();
+const getPostById = async(post_id, increaseView = true) => {
+    const posts = await getAllPosts();
     const postIndex = posts.findIndex(post => post.post_id === post_id);
 
     if(postIndex === -1){
@@ -105,8 +105,8 @@ const getPostById = (post_id, increaseView = true) => {
 
 
 //게시글 수정
-const patchPost = (post_id, updatedData) => {
-    const posts = getAllPosts();
+const patchPost = async (post_id, updatedData) => {
+    const posts = await getAllPosts();
     const postIndex = posts.findIndex(post => post.post_id === post_id);
     if(postIndex === -1){
         return null
@@ -127,14 +127,14 @@ const patchPost = (post_id, updatedData) => {
 //이미지 삭제.
 const deleteImage = async(post_id) => {
     //게시글 정보 가져오기
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     const post = posts.find(post => post.post_id === post_id);
 
     if (!post || !post.image) {
         return false;
     }
 
-    const imagePath = path.join(rootDir,'images/',post.image);
+    const imagePath = path.join(rootDir,'data','images',post.image);
 
     try{
         //이미지 삭제
@@ -148,8 +148,8 @@ const deleteImage = async(post_id) => {
 }
 
 //게시글 삭제
-const deletePost = (post_id) => {
-    const posts = getAllPosts();
+const deletePost = async(post_id) => {
+    const posts = await getAllPosts();
     const index = posts.findIndex(post => post.post_id === post_id);
     if(index !== -1){
         posts.splice(index,1);
@@ -163,11 +163,11 @@ const deletePost = (post_id) => {
 
 //댓글 작성
 const addComment = async(post_id, comment) => {
-    
-    const posts = getAllPosts();
+
+    const posts = await getAllPosts();
     //NOTE : 수정/삭제할 때는 findIndex 사용
     const postIndex = posts.findIndex(post => post.post_id === post_id);
-    
+
     if(postIndex === -1){
         return null;
     }
@@ -177,7 +177,7 @@ const addComment = async(post_id, comment) => {
         comment_id : Date.now().toString(),
         user_id: comment.user_id,
         post_id,
-        name: posts[postIndex].name, //FIXME 원래 로컬스토리지에서 가져옴 -> 로그인한 닉네임 정보가 출력./ 추후에 user_id로 연결해서 사용
+        name: comment.name, //[24.12.11]FIX : 세션에서 name 가져오기
         content: comment.content,
         created_date: new Date().toISOString(),
         updated_date: new Date().toISOString()
@@ -187,18 +187,18 @@ const addComment = async(post_id, comment) => {
     posts[postIndex].comments_count += 1;
 
     posts[postIndex].comments.unshift(newComment); //배열 맨앞에 추가
-    await savePosts(posts);
+    savePosts(posts);
     return true;
 }
 
 //댓글 수정
 const patchComment = async(post_id,comment_id,content) => {
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     const post = posts.find(post => post.post_id === post_id);
     if(!post){
         return null;
     }
-    
+
     const commentIndex = post.comments.findIndex(comment => comment.comment_id === comment_id);
     if(commentIndex === -1){
         return null;
@@ -211,7 +211,7 @@ const patchComment = async(post_id,comment_id,content) => {
         updated_date: new Date().toISOString()
     };
 
-    await savePosts(posts);
+    savePosts(posts);
     return true;
 
 
@@ -219,7 +219,7 @@ const patchComment = async(post_id,comment_id,content) => {
 
 //댓글 삭제
 const deleteComment = async(post_id,comment_id) => {
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     const post = posts.find(post => post.post_id === post_id);
 
     if(!post) return false;
@@ -237,10 +237,39 @@ const deleteComment = async(post_id,comment_id) => {
     }
 }
 
+// 사용자 관련 데이터 삭제
+const deleteUserRelatedData = async(user_id) => {
+    const posts = await getAllPosts();
+    
+    // 게시글과 관련 이미지 삭제를 위해 역순으로 순회
+    for (let i = posts.length - 1; i >= 0; i--) {
+        const post = posts[i];
+        
+        if (post.user_id === user_id) {
+            // 게시글에 이미지가 있다면 먼저 삭제 -> 의존성 처리
+            if (post.image) {
+                await deleteImage(post.post_id);
+            }
+            // 게시글 삭제
+            posts.splice(i, 1);
+        } else {
+            // 댓글 삭제를 위해 역순으로 순회
+            for (let j = post.comments.length - 1; j >= 0; j--) {
+                if (post.comments[j].user_id === user_id) {
+                    post.comments.splice(j, 1);
+                    post.comments_count -= 1; // 댓글 수 감소
+                }
+            }
+        }
+    }
+    
+    savePosts(posts);
+    return true;
+}
 //좋아요 업데이트
-const patchLike = (post_id, like) =>{
+const patchLike = async(post_id, like) =>{
 
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     const postIndex = posts.findIndex(post=> post.post_id === post_id);
 
     if(postIndex === -1){
@@ -265,5 +294,6 @@ module.exports = {
     addComment,
     patchComment,
     deleteComment,
+    deleteUserRelatedData,
     patchLike
 }
