@@ -1,7 +1,6 @@
-const multer = require('multer');
+import multer from 'multer';
 
 const createMulter = (uploadPath) => {
-
     //multer 설정
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
@@ -14,8 +13,8 @@ const createMulter = (uploadPath) => {
         }
     });
 
-    //파일 필터링
-    const fileFilter = (req,file,cb) => {
+    //파일 필터링 
+    const fileFilter = (req, file, cb) => {
         if(file.mimetype.startsWith('image/')){
             cb(null, true);
         }else{
@@ -24,13 +23,13 @@ const createMulter = (uploadPath) => {
     };
 
     return multer({
-        storage: storage,
-        fileFilter:fileFilter,
+        storage,
+        fileFilter,
         limits: {
             fileSize: 1024 * 1024 * 5, //5MB
         }
-    })
-}
+    });
+};
 
 // 게시글 업로드
 const postsUpload = createMulter('server/data/images');
@@ -38,4 +37,4 @@ const postsUpload = createMulter('server/data/images');
 // 프로필 업로드
 const profileUpload = createMulter('server/data/images/profile');
 
-module.exports = {postsUpload, profileUpload};
+export { postsUpload, profileUpload };

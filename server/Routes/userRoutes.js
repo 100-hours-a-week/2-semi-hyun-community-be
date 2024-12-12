@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router(); 
-const authMiddleware = require('../Middlewares/authMiddleware');
-const userController = require('../Controllers/userController');
+import express from 'express';
+import authMiddleware from '../Middlewares/authMiddleware.js';
+import userController from '../Controllers/userController.js';
 
+const router = express.Router(); 
 //프로필 사진 조회
 router.get('/:user_id/profile', authMiddleware, userController.getProfileImage);
 
@@ -23,4 +23,4 @@ router.get('/me/header_image', authMiddleware, userController.getHeaderImage);
 
 //라우터 객체를 모듈로 내보내기
 //NOTE: 다른 파일에서 라우터를 쉽게 가져와 사용할 수 있다. + 재사용성
-module.exports = router; 
+export default router; 

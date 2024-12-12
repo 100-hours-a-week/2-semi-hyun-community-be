@@ -1,12 +1,18 @@
 //환경변수 로드 패키지 + dotenv.config(): 실제로 .env 파일을 읽음
-require('dotenv').config(); 
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
-const path = require('path');
-const app = express();
-const port = 3000;
+import dotenv from 'dotenv'; dotenv.config();
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { PORT, CORS_OPTIONS } from './server/config/express-config.js';
 
+// ES 모듈에서 __dirname 사용하기 위한 설정
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const port = PORT;
 
 //json 파싱 미들웨어
 app.use(express.json());
@@ -16,10 +22,7 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'server/data/images')));
 
 //cors 미들웨어 설정
-app.use(cors({
-  origin : 'http://localhost:8081', //프론트 서버 주소
-  credentials : true
-}));
+app.use(cors(CORS_OPTIONS));
 
 //세션 미들웨어 설정
 app.use(session({
@@ -45,9 +48,9 @@ app.use(loggingMiddleware);
 
 
 //라우트 설정
-const authRoutes = require('./server/Routes/authRoutes'); //폴더 경로
-const dashboardRoutes = require('./server/Routes/dashboardRoutes');
-const userRoutes = require('./server/Routes/userRoutes');
+import authRoutes from './server/Routes/authRoutes.js'; //폴더 경로
+import dashboardRoutes from './server/Routes/dashboardRoutes.js';
+import userRoutes from './server/Routes/userRoutes.js';
 
 
 app.use('/api/v1/auth',authRoutes);
@@ -55,6 +58,6 @@ app.use('/api/v1/posts',dashboardRoutes);
 app.use('/api/v1/users',userRoutes);
 
 
-app.listen(port, function () {
+app.listen(port, () => {
   console.log(`--Backend Server Start-- ${new Date().toISOString()} - Port: ${port}`);
   });

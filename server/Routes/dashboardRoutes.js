@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import dashboardController from '../Controllers/dashboardController.js';
+import commentController from '../Controllers/commentController.js';
+import authMiddleware from '../Middlewares/authMiddleware.js';
+
 const router = express.Router();
-const dashboardController = require('../Controllers/dashboardController');
-const commentController = require('../Controllers/commentController');
-const authMiddleware = require('../Middlewares/authMiddleware');
 
 
 //게시글 목록조회 - 데이터 조회
@@ -37,4 +38,4 @@ router.patch('/:post_id/like',authMiddleware,dashboardController.patchLike);
 
 
 //NOTE: 라우터 객체를 모듈로 내보내기 -> 주서버에 모두 작성하지 않아도됨
-module.exports = router;
+export default router;

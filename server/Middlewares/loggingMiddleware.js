@@ -14,4 +14,4 @@ const loggingMiddleware = (req, res, next) => {
 
 };
 
-module.exports = loggingMiddleware;
+export default loggingMiddleware;
