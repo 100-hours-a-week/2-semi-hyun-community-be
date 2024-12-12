@@ -71,9 +71,7 @@ const deleteProfileImage = async(user_id) => {
     try{
 
         //NOTE : unlink is using the callback-based API. not the promise-based API.
-        console.log(imagePath);
         await fs.promises.unlink(imagePath);
-        console.log('프로필 삭제 완료');
         return true;
     }catch(error){
         console.error('Error deleting image:', error);

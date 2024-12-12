@@ -72,13 +72,16 @@ exports.postLogin = async (req, res) => {
 
 //회원가입 처리
 exports.postSignUp = async (req, res) => {
-    const { name, email, password} = req.body; //입력한 정보 가져옴
+    const { name, email, password, passwordCheck} = req.body; //입력한 정보 가져옴
     let userData;
 
     //데이터 유효성 검사
     //NOTE : 이미지 파일 -> req.file로 확인
-    if (!name || !email || !password || !req.file) { 
-        return res.status(400).json({message:"invalid_format"});
+    if (!name || !email || !password ||!passwordCheck || !req.file) { 
+        return res.status(400).json({message:"모든 필드를 입력해주세요."});
+    }
+    if(password !== passwordCheck){
+        return res.status(400).json({message:"비밀번호가 일치하지 않습니다."});
     }
 
     try {

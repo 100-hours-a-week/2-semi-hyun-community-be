@@ -45,7 +45,7 @@ exports.getPostData = async (req,res) => {
         // NOTE:await Promise.resolve(getPostById(post_id))와 동일하게 처리됨
         // getPostById: post 조회 + 조회수 증가
         const post = await PostService.getPostById(post_id);
-        
+
 
         if(!post){
             return res.status(400).json({message : 'invalid_post_id'})
@@ -53,7 +53,7 @@ exports.getPostData = async (req,res) => {
 
         // await PostService.updatePost(post_id, { view: post.view });
         // await PostService.addView(post_id);
-        
+
         return res.status(200).json(post);
 
     }catch(error){
@@ -106,7 +106,7 @@ exports.patchEditPost = [postsUpload.single('image'),async(req, res) => {
         }
 
         //게시글 수정
-        const post = PostService.patchPost(post_id,{
+        const post = await PostService.patchPost(post_id,{
             title,
             content,
             image: req.file ? req.file.filename: undefined
@@ -166,7 +166,7 @@ exports.patchLike = async (req,res) => {
         if(!post){
             return res.status(404).send();
         }
-    
+
         return res.status(204).send();
 
     }catch(error){

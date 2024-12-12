@@ -1,15 +1,16 @@
 const PostService = require('../Service/PostService');
 
 //댓글추가
+//댓글추가
 exports.addComment = async (req,res)=> {
-    const {post_id, user_id, content} = req.body;
-
+    const {post_id,content} = req.body;
+    const {user_id,name} = req.session.user;
     if(!content){
         return res.status(400).json({message: '내용을 입력해주세요.'});
     }
 
     try{
-        const result = await PostService.addComment(post_id,{user_id,content});
+        const result = await PostService.addComment(post_id,{user_id,name,content});
 
         if(!result){
             return res.status(404).json({message: '게시글을 찾을 수 없습니다.'});
