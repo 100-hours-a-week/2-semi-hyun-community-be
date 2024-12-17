@@ -144,4 +144,107 @@ const authController = {
     }
 };
 
+//회원가입 처리
+exports.postSignUp = async (req, res) => {
+    const { name, email, password, passwordCheck} = req.body; //입력한 정보 가져옴
+    let userData;
+
+    //데이터 유효성 검사
+    //NOTE : 이미지 파일 -> req.file로 확인
+    if (!name || !email || !password ||!passwordCheck || !req.file) { 
+        return res.status(400).json({message:"모든 필드를 입력해주세요."});
+    }
+    if(password !== passwordCheck){
+        return res.status(400).json({message:"비밀번호가 일치하지 않습니다."});
+    }
+
+    try {
+        const users = await SignUp.readUser();
+        
+        //중복 이메일 검사
+        if (users.find((user) => user.email === email)) {
+            return res.status(409).json({message:"already_exist"});
+        }
+        
+        // --회원가입 성공--
+
+        userData = {
+            user_id: v4(),
+            name: name,
+            email: email,
+            password: password,
+            image: req.file.filename,
+            created_date: TimeStamp.getTime(),
+            updated_date : TimeStamp.getTime()
+        };
+        users.push(userData); //새로운 사용자 추가
+        await SignUp.writeUser(users); //덮어쓰기
+
+        //성공 응답 -> 회원가입 완료 후 로그인 화면으로 리디렉션
+        console.log('회원가입 성공, 응답 전송');
+        res.status(201).json({
+            status: 'success',
+            message : '회원가입 완료. 로그인 화면으로 이동',
+            data:{}
+        });
+
+        //1초 후 로그인 화면으로
+        //setTimeout(() => {res.redirect('/login')}, 1000);
+
+    } catch (error) {
+        console.error('회원가입 처리 중 오류 발생:', error);
+        res.status(500).json({
+            status: 'error',
+            message: '회원가입 중 오류가 발생했습니다.',
+            data: null,
+        });
+    }
+};
+
+//로그아웃
+exports.postLogout = (req,res) => {
+    
+    //세션이 있을경우
+    //세션 삭제 완료 후 쿠키 제거
+    if(req.session.user){
+        //destroy:비동기작업
+        req.session.destroy(err => {
+            if(err){
+                return res.status(500).json({message: '로그아웃 처리 중 오류가 발생했습니다.'});
+            }
+
+            //세션 쿠키 제거
+            //NOTE : connect: 세션 미들웨어 이름 / sid: session id 
+            res.clearCookie('connect.sid');
+            return res.status(200).json({message : '로그아웃 되었습니다'});
+        });
+    }
+    else{
+        return res.status(200).json({message : '이미 로그아웃 되었습니다'});
+    }
+
+
+}
+
+
+//이메일 중복 체크
+exports.postCheckEmail = async (req,res) => {
+    const {email} = req.body;
+
+    const isDuplicate = await UserService.checkEmail(email);
+
+    return res.status(200).json({isDuplicate});
+    
+}
+
+//닉네임 중복 체크
+exports.postCheckName = async (req,res) => {
+    const {name} = req.body;
+
+    const isDuplicate = await UserService.checkName(name);
+
+    return res.status(200).json({isDuplicate});
+    
+}
+
 export default authController;
