@@ -31,7 +31,7 @@ exports.editComment = async(req,res)=> {
     const {user_id} = req.session.user;
 
     //권한 확인 
-    const isAuthorized = PostService.checkAuthorization(post_id, user_id, comment_id,'comment');  
+    const isAuthorized = await PostService.checkAuthorization(post_id, user_id, comment_id,'comment');  
     if(!isAuthorized){
         return res.status(403).json({message : '게시글 작성자만 수정할 수 있습니다.'});
     }   
@@ -55,7 +55,7 @@ exports.deleteComment = async (req,res)=> {
     const {user_id} = req.session.user;
 
     //권한 확인
-    const isAuthorized = PostService.checkAuthorization(post_id, user_id, comment_id,'comment');  
+    const isAuthorized = await PostService.checkAuthorization(post_id, user_id, comment_id,'comment');  
     if(!isAuthorized){
         return res.status(403).json({message : '게시글 작성자만 삭제할 수 있습니다.'});
     }

@@ -140,11 +140,27 @@ const deleteUser = async (user_id) => {
 
 }
 
+//이메일 중복 체크
+const checkEmail = async (email) => {
+    const users = getAllUsers();
+    const user = users.find(user => user.email === email);
+    //true: 중복, false: 중복x
+    return user ? true : false;
+}
+
+const checkName = async (name) => {
+    const users = getAllUsers();
+    const user = users.find(user => user.name === name);
+    return user ? true : false;
+}
+
 module.exports ={
     checkAuthorization,
     getUserById,
     deleteProfileImage,
     deleteUser,
     patchPost,
-    patchPassword
+    patchPassword,
+    checkEmail,
+    checkName
 }

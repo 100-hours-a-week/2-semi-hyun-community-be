@@ -6,11 +6,18 @@ const router = express.Router();
 const {profileUpload} = require('../Service/multerConfig');
 const authController = require('../Controllers/authController');
 
+
 //로그인 처리 (POST)
 router.post('/login',authController.postLogin);
 
 //회원가입 처리 라우트 (POST)
 router.post('/signUp',profileUpload.single('image'),authController.postSignUp);
+
+//이메일 중복 체크 라우트 (POST)
+router.post('/check-email',authController.postCheckEmail);
+
+//닉네임 중복 체크 라우트 (POST)
+router.post('/check-name',authController.postCheckName);
 
 //로그아웃 라우트
 router.post('/logout', authController.postLogout);
