@@ -1,5 +1,6 @@
 const SignUp = require('../Service/SignUpJson');
 const TimeStamp = require('../Service/TimeStamp');
+const UserService = require('../Service/UserService');
 const { v4 } = require('uuid');
 
 
@@ -150,4 +151,25 @@ exports.postLogout = (req,res) => {
     }
 
 
+}
+
+
+//이메일 중복 체크
+exports.postCheckEmail = async (req,res) => {
+    const {email} = req.body;
+
+    const isDuplicate = await UserService.checkEmail(email);
+
+    return res.status(200).json({isDuplicate});
+    
+}
+
+//닉네임 중복 체크
+exports.postCheckName = async (req,res) => {
+    const {name} = req.body;
+
+    const isDuplicate = await UserService.checkName(name);
+
+    return res.status(200).json({isDuplicate});
+    
 }
