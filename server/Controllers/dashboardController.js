@@ -8,7 +8,8 @@ exports.checkAuthorization = async(req,res) => {
     const {post_id} = req.params;
     const {user_id} = req.session.user;
 
-    const isAuthorized = PostService.checkAuthorization(post_id, user_id);
+    const isAuthorized = await PostService.checkAuthorization(post_id, user_id);
+
     if(!isAuthorized){
         return res.status(403).json({message : '삭제 권한이 없습니다.'});
     }
@@ -133,7 +134,7 @@ exports.deletePost = async (req,res)=>{
     const {user_id} = req.session.user;
     try{
 
-        const isAuthorized = PostService.checkAuthorization(post_id, user_id);
+        const isAuthorized = await PostService.checkAuthorization(post_id, user_id);
         console.log(isAuthorized);
         if(!isAuthorized){
             return res.status(403).json({message : '게시글 작성자만 삭제할 수 있습니다.'});
