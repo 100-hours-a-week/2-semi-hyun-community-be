@@ -1,5 +1,6 @@
 //환경변수 로드 패키지 + dotenv.config(): 실제로 .env 파일을 읽음
-import 'dotenv/config';
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
