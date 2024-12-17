@@ -69,8 +69,8 @@ const addPost = async({ title, content, name, user_id, imageFilename = '' }) => 
         image: imageFilename,
         name,
         user_id,
-        created_date: new Date().toISOString(),
-        updated_date: new Date().toISOString(),
+        created_date: new Date().toLocaleString('ko-KR'),
+        updated_date: new Date().toLocaleString('ko-KR'),
         views: 0, //숫자로 변경
         likes: 0,
         comments_count: 0,
@@ -118,7 +118,7 @@ const patchPost = async (post_id, updatedData) => {
         title: updatedData.title,     // 2. 새로운 제목으로 덮어쓰기
         content: updatedData.content, 
         image: updatedData.image? updatedData.image : posts[postIndex].image, //update 이미지 없으면 기존이미지 유지
-        updated_date: new Date().toISOString()
+        updated_date: new Date().toLocaleString('ko-KR')
     };
     savePosts(posts);
     return true;
@@ -179,8 +179,8 @@ const addComment = async(post_id, comment) => {
         post_id,
         name: comment.name, //[24.12.11]FIX : 세션에서 name 가져오기
         content: comment.content,
-        created_date: new Date().toISOString(),
-        updated_date: new Date().toISOString()
+        created_date: new Date().toLocaleString('ko-KR'),
+        updated_date: new Date().toLocaleString('ko-KR')
     };
 
     //댓글수 증가
@@ -208,7 +208,7 @@ const patchComment = async(post_id,comment_id,content) => {
     post.comments[commentIndex] = {
         ...post.comments[commentIndex],     // 기존 게시글 모든 속성을 복사
         content: content,                   // 새로운 내용으로 덮어쓰기     
-        updated_date: new Date().toISOString()
+        updated_date: new Date().toLocaleString('ko-KR')
     };
 
     savePosts(posts);
