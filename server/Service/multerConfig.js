@@ -7,9 +7,11 @@ const createMulter = (uploadPath) => {
             cb(null, uploadPath);
         },
         filename: (req, file, cb) => {
-            const encodedFilename = encodeURIComponent(file.originalname);
-            const name = req.session.user ? req.session.user.name : req.body.name;
-            cb(null, `${name}-${Date.now()}-${encodedFilename}`);
+            // 원본 파일명에서 공백을 하이픈으로 대체
+            const sanitizedFilename = file.originalname.replace(/\s+/g, '-');
+            // const encodedFilename = encodeURIComponent(sanitizedFilename);
+            const fileName = `${Date.now()}-${sanitizedFilename}`;
+            cb(null,Buffer.from(fileName).toString('utf8'));
         }
     });
 
