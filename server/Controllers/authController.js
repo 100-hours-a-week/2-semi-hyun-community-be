@@ -1,4 +1,5 @@
 import { readUser, writeUser, updateUser } from '../Service/SignUpJson.js';
+import UserService from '../Service/UserService.js';
 import { v4 } from 'uuid';
 
 // 객체 리터럴 패턴

@@ -42,7 +42,7 @@ app.use(session({
 
 
 //로깅 설정
-const loggingMiddleware = require('./server/Middlewares/loggingMiddleware');
+import loggingMiddleware from './server/Middlewares/loggingMiddleware.js';
 app.use(loggingMiddleware);
 
 

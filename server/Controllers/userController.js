@@ -1,6 +1,6 @@
 import {profileUpload} from '../Service/multerConfig.js';
 import UserService from '../Service/UserService.js';
-import {deleteUserRelatedData} from '../Service/PostService.js';
+import PostService from '../Service/PostService.js';
 
 const userController = {
     //이미지 조회
@@ -126,7 +126,7 @@ const userController = {
             await UserService.deleteProfileImage(user_id);
 
             //사용자 관련 데이터 삭제
-            await deleteUserRelatedData(user_id);
+            await PostService.deleteUserRelatedData(user_id);
             //사용자 삭제
             const result = await UserService.deleteUser(user_id);
 

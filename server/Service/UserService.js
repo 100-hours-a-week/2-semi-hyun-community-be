@@ -84,7 +84,7 @@ const UserService = {
     },
 
     //회원 정보 수정
-    patchPost: async (user_id,userdata) => {
+    patchPost: async (user_id, userdata) => {
         const users = UserService.getAllUsers();
         const userIndex = users.findIndex(user => user.user_id === user_id);
 
@@ -93,10 +93,10 @@ const UserService = {
         }
 
         //데이터 수정 (스프레드 연산자 사용)
-        users[userIndex] ={
+        users[userIndex] = {
             ...users[userIndex],
             name: userdata.name,
-            image : userdata.image? userdata.image : users[userIndex].image,
+            image: userdata.image ? userdata.image : users[userIndex].image,
             updated_date: new Date().toISOString()
         };
 
@@ -107,7 +107,7 @@ const UserService = {
     },
 
     //비밀번호 수정
-    patchPassword: async (user_id,password) => {
+    patchPassword: async (user_id, password) => {
         const users = UserService.getAllUsers();
         const userIndex = users.findIndex(user => user.user_id === user_id);
 
@@ -116,9 +116,9 @@ const UserService = {
         }
 
         //데이터 수정 (스프레드 연산자 사용)
-        users[userIndex] ={
+        users[userIndex] = {
             ...users[userIndex],
-            password,
+            password: password,
             updated_date: new Date().toISOString()
         };
 
@@ -141,92 +141,22 @@ const UserService = {
         await UserService.saveUsers(users);
 
         return true;
+    },
+
+    //이메일 중복 체크
+    checkEmail: async (email) => {
+        const users = UserService.getAllUsers();
+        const user = users.find(user => user.email === email);
+        //true: 중복, false: 중복x
+        return user ? true : false;
+    },
+
+    //이름 중복 체크
+    checkName: async (name) => {
+        const users = UserService.getAllUsers();
+        const user = users.find(user => user.name === name);
+        return user ? true : false;
     }
 };
 
 export default UserService;
-//회원 정보 수정
-const patchPost = async (user_id,userdata) => {
-    const users = getAllUsers();
-    const userIndex = users.findIndex(user => user.user_id === user_id);
-
-    if(userIndex === -1){
-        return null
-    }
-
-    //데이터 수정 (스프레드 연산자 사용)
-    users[userIndex] ={
-        ...users[userIndex],
-        name: userdata.name,
-        image : userdata.image? userdata.image : users[userIndex].image,
-        updated_date: new Date().toISOString()
-    };
-
-    //수정된 데이터를 저장
-    await saveUsers(users);
-
-    return true;
-}
-
-//비밀번호 수정
-const patchPassword = async (user_id,password) => {
-    const users = getAllUsers();
-    const userIndex = users.findIndex(user => user.user_id === user_id);
-
-    if(userIndex === -1){
-        return null
-    }
-
-    //데이터 수정 (스프레드 연산자 사용)
-    users[userIndex] ={
-        ...users[userIndex],
-        password : password,
-        updated_date: new Date().toISOString()
-    };
-
-    //수정된 데이터를 저장
-    await saveUsers(users);
-
-    return true;
-}
-
-//사용자 삭제
-const deleteUser = async (user_id) => {
-    const users = getAllUsers();
-    const userIndex = users.findIndex(user => user.user_id === user_id);
-
-    if(userIndex === -1){
-        return false;
-    }
-    //NOTE : splice(수정시작위치, 삭제할 요소 갯수, 배열에 추가할 새로운 요소)
-    users.splice(userIndex,1);
-    await saveUsers(users);
-
-    return true;
-
-}
-
-//이메일 중복 체크
-const checkEmail = async (email) => {
-    const users = getAllUsers();
-    const user = users.find(user => user.email === email);
-    //true: 중복, false: 중복x
-    return user ? true : false;
-}
-
-const checkName = async (name) => {
-    const users = getAllUsers();
-    const user = users.find(user => user.name === name);
-    return user ? true : false;
-}
-
-module.exports ={
-    checkAuthorization,
-    getUserById,
-    deleteProfileImage,
-    deleteUser,
-    patchPost,
-    patchPassword,
-    checkEmail,
-    checkName
-}

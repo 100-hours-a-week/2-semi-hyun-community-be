@@ -247,6 +247,3 @@ const PostService = {
 };
 
 export default PostService;
-export {
-    checkAuthorization
-};
