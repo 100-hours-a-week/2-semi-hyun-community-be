@@ -5,8 +5,11 @@
 #(+)24.11.18  test 폴더는 제외
 archive/**
 
+community/data/login.json
+community/data/posts.json
+server/config/.env
 # env 파일 제외
-.env/**
+*.env
 # User-specific files
 *.suo
 *.user
@@ -201,5 +204,4 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 
-community/data/login.json
-community/data/posts.json
+
