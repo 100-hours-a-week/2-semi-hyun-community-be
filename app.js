@@ -1,5 +1,3 @@
-//환경변수 로드 패키지 + dotenv.config(): 실제로 .env 파일을 읽음
-import dotenv from 'dotenv'; dotenv.config();
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
@@ -39,7 +37,6 @@ app.use(session({
 
 //MYSQL 연결
 import { testDatabaseConnection } from './server/Models/db.js'; // db 모듈에서 query 함수 임포트
-
 
 testDatabaseConnection();
 
