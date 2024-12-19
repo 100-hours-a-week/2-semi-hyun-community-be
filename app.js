@@ -38,8 +38,10 @@ app.use(session({
 
 
 //MYSQL 연결
-// const db = require('./server/models/db');
+import { testDatabaseConnection } from './server/Models/db.js'; // db 모듈에서 query 함수 임포트
 
+
+testDatabaseConnection();
 
 //로깅 설정
 import loggingMiddleware from './server/Middlewares/loggingMiddleware.js';
