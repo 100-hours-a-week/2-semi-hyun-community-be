@@ -1,17 +1,11 @@
-import { query } from './db.js';
+import { query } from './Connect_DB.js';
 
-const UserService = {
-    // 모든 사용자 조회
-    getAllUsers: async () => {
-        try {
-            const sql = 'SELECT * FROM users'; // 테이블 이름에 맞게 수정
-            const users = await query(sql);
-            return users;
-        } catch (error) {
-            console.error('사용자 조회 오류:', error);
-            throw error;
-        }
-    },
+const UserModel = {
+    // 사용자 권한 확인
+    checkAuthorization: async (user_id) => {},
+
+    // 특정 데이터 조회
+    getUserById: async (user_id) => {},
 
     // 사용자 추가
     addUser: async (userData) => {
@@ -26,7 +20,20 @@ const UserService = {
         }
     },
 
-    // 기타 사용자 관련 함수...
+    // 사용자 정보 수정
+    patchUser: async (user_id, userData) => {},
+
+    // 비밀번호 수정
+    patchPassword: async (user_id, password) => {},
+
+    // 사용자 삭제
+    deleteUser: async (user_id) => {},
+
+    // 이메일 중복 체크
+    checkEmail: async (email) => {},
+
+    // 이름 중복 체크
+    checkName: async (name) => {}
 };
 
 export default UserService;

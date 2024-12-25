@@ -36,7 +36,7 @@ app.use(session({
 
 
 //MYSQL 연결
-import { testDatabaseConnection } from './server/Models/db.js'; // db 모듈에서 query 함수 임포트
+import { testDatabaseConnection } from './server/Models/Connect_DB.js'; // db 모듈에서 query 함수 임포트
 
 testDatabaseConnection();
 
