@@ -1,9 +1,13 @@
 import express from 'express';
 import session from 'express-session';
+import dotenv from 'dotenv';
+import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { PORT, CORS_OPTIONS } from './server/config/express-config.js';
+
+dotenv.config();
 
 // ES 모듈에서 __dirname 사용하기 위한 설정
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +15,16 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = PORT;
+
+//보안 미들웨어 설정
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+      "default-src" :process.env.CSP_DEFAULT_SRC.split(' '),
+      "script-src" :process.env.CSP_SCRIPT_SRC.split(' '),
+      "style-src" :process.env.CSP_STYLE_SRC.split(' '),
+      "img-src" :process.env.CSP_IMG_SRC.split(' '),
+    }
+}));
 
 //json 파싱 미들웨어
 app.use(express.json());
@@ -24,13 +38,13 @@ app.use(cors(CORS_OPTIONS));
 
 //세션 미들웨어 설정
 app.use(session({
-    secret: 'your_secret_key',   // 세션 암호화 키
+    secret: process.env.SESSION_SECRET,   // 세션 암호화 키
     resave: false,               // 세션을 매번 저장할지 여부
     saveUninitialized: true,     // 초기화되지 않은 세션을 저장할지 여부 (true는 세션 생성 시 저장)
     cookie: { 
         secure: false,  // HTTPS에서만 쿠키를 사용할지 여부 (true는 HTTPS에서만 사용)
         httpOnly : true, // js로 쿠키 접근 금지
-        maxAge: 24 * 60 * 60 * 1000 // 24시간
+        maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE,10) // 24시간, 문자열->숫자
     }    
   }));
 
