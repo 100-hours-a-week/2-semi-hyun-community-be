@@ -1,9 +1,11 @@
 import { readUser, writeUser, updateUser } from '../Service/SignUpJson.js';
-import UserService from '../Service/UserService.js';
+import UserModel from '../Models/UserModel.js';
+import bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
 
 // 객체 리터럴 패턴
 const authController = {
+
     // 로그인 처리
     postLogin: async (req, res) => {
         const { email, password } = req.body;
@@ -15,8 +17,7 @@ const authController = {
         }
     
         try {
-            const users = await readUser(); // 비동기 작업 -> 목록 읽기 (프로미스가 해결될때까지 기다림)
-            const user = users.find((user) => user.email === email); // 없으면 undefined
+            const user = await UserModel.getUserByEmail(email);
     
             // if undefined = false
             if (!user) { 
@@ -25,9 +26,10 @@ const authController = {
                 });
             }
     
-            // 비밀번호 다시 입력
-            // FIXME : 비밀번호 암호화 과정 + 비교 과정 필요
-            if (user.password !== password) { 
+            // 비밀번호 비교 (bcrypt 사용)
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            if(!isPasswordValid){
                 return res.status(401).json({
                     message: '비밀번호를 다시 입력해주세요.'
                 });
@@ -44,8 +46,8 @@ const authController = {
             // 세션에 사용자 정보 저장
             req.session.user = sessionData;
     
-            // FIXME : 사용자 json 데이터 업데이트 -> 지금은 시간만 업데이트 하면 되서 안함
-            // const updated_at = TimeStamp.getTime();
+            //로그인 시간 업데이트
+            await UserModel.updateLoginTime(user.user_id);
     
             //[Update] 세션 저장 후 응답
             req.session.save((err) => {
@@ -84,29 +86,24 @@ const authController = {
         }
 
         try {
-            const users = await readUser();
-            
-            // 중복 이메일 검사
-            if (users.find((user) => user.email === email)) {
-                return res.status(409).json({ message: "already_exist" });
-            }
-            
+            // FIXME : 이메일 중복 검사를 회원가입 요청 전에 처리
+            // 비밀번호 해싱
+            const hashedPassword = await bcrypt.hash(password,10);
+
             // --회원가입 성공--
             userData = {
                 user_id: v4(),
                 name,
                 email,
-                password,
-                image: req.file.filename,
-                created_date: new Date().toISOString(),
-                updated_date: new Date().toISOString()
+                password: hashedPassword,
+                profile_image: req.file.filename,
             };
-            users.push(userData); // 새로운 사용자 추가
-            await writeUser(users); // 덮어쓰기
+
+            await UserModel.addUser(userData);
 
             // 성공 응답 -> 회원가입 완료 후 로그인 화면으로 리디렉션
-            console.log('회원가입 성공, 응답 전송');
             res.status(201).json({
+                //FIXME: status,data 필요없으면 삭제
                 status: 'success',
                 message: '회원가입 완료. 로그인 화면으로 이동',
                 data: {}
@@ -147,18 +144,28 @@ const authController = {
     postCheckEmail: async (req, res) => {
         const { email } = req.body;
 
-        const isDuplicate = await UserService.checkEmail(email);
+        try{
+            const isDuplicate = await UserModel.checkEmail(email);
+            return res.status(200).json({ isDuplicate });
 
-        return res.status(200).json({ isDuplicate });
+        }catch(error){
+            console.error('이메일 중복 체크 오류:', error);
+            return res.status(500).json({ message: '이메일 중복 체크 중 오류가 발생했습니다.' });
+        }
     },
 
     // 닉네임 중복 체크
     postCheckName: async (req, res) => {
         const { name } = req.body;
 
-        const isDuplicate = await UserService.checkName(name);
+        try{
+            const isDuplicate = await UserModel.checkName(name);
+            return res.status(200).json({ isDuplicate });
 
-        return res.status(200).json({ isDuplicate });
+        }catch(error){
+            console.error('이메일 중복 체크 오류:', error);
+            return res.status(500).json({ message: '이메일 중복 체크 중 오류가 발생했습니다.' });
+        }
     }
 };
 

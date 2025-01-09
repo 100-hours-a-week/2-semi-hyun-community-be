@@ -52,7 +52,7 @@
                 return res.status(200).json({ message: '댓글이 수정되었습니다.' });
                 
             } catch (error) {
-                console.error('댓글 수정 중 오류 발생:', error);
+                console.error('댓글 수정 오류 발생:', error);
                 return res.status(500).json({ message: 'internal_server_error' });
             }
         },
@@ -78,7 +78,7 @@
                 // 삭제 성공
                 return res.status(200).json({ message: '댓글이 삭제되었습니다.' });
             } catch (error) {
-                console.error('댓글 삭제 중 오류 발생:', error);
+                console.error('댓글 삭제 오류 발생:', error);
                 return res.status(500).json({ message: 'internal_server_error' });
             }
         }

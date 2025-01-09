@@ -6,7 +6,7 @@ import { join } from 'path';
 dotenv.config({path:join(process.cwd(), 'server', 'config', '.env')});
 
 //환경 변수 - DB 설정 가져오기
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_TEST } = process.env;
+const { DB_HOST, DB_USER, DB_PASSWORD, DB_PROD, DB_PORT, DB_TEST } = process.env;
 
 //DB 연결 풀 생성
 const pool = mysql.createPool({
@@ -14,17 +14,17 @@ const pool = mysql.createPool({
     host : DB_HOST,
     user : DB_USER,
     password : DB_PASSWORD,
-    database : DB_TEST,//[24.12.19]테스트 스키마 사용
+    database : DB_PROD,//[24.12.19]테스트 스키마 사용
     port : DB_PORT
 }).promise();
 
 //쿼리 실행 함수
 //NOTE: mysql2 : promise 기본 지원
 //NOTE: mysql은 쿼리결과를 [rows,field] 형태로 반환. result[0]:rows, result[1]:field(column)
-
 const query = async(sql, values) => {
     try{
         const result = await pool.query(sql, values);
+        //rows만 반환
         return result[0];
     }catch(error){
         console.error('쿼리 실행 오류:', error);
