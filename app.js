@@ -16,15 +16,37 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = PORT;
 
+//cors 미들웨어 설정
+app.use(cors(CORS_OPTIONS));
+
 //보안 미들웨어 설정
-app.use(helmet.contentSecurityPolicy({
+app.use(helmet({
+
+  //CSP 설정
+  contentSecurityPolicy : {
     directives: {
       "default-src" :process.env.CSP_DEFAULT_SRC.split(' '),
       "script-src" :process.env.CSP_SCRIPT_SRC.split(' '),
       "style-src" :process.env.CSP_STYLE_SRC.split(' '),
       "img-src" :process.env.CSP_IMG_SRC.split(' '),
     }
+  },
+
+  // X-Frame-Options 설정
+  frameguard :{
+    action: "deny" //프레임에서 렌더링 완전 차단
+  },
+
+  noSniff : true, // MIME 타입 스니핑 방지
+
+  //
+  crossOriginResourcePolicy: {
+    policy: "cross-origin" // 프론트-백엔드 통신 허용
+  }
+
 }));
+
+
 
 //json 파싱 미들웨어
 app.use(express.json());
@@ -32,9 +54,6 @@ app.use(express.json());
 //이미지 정적파일 제공
 //NOTE: /images 경로를 통해 접근할 시 디렉토리에 저장된 이미지를 사용할 수 있다.
 app.use('/images', express.static(path.join(__dirname, 'server/data/images')));
-
-//cors 미들웨어 설정
-app.use(cors(CORS_OPTIONS));
 
 //세션 미들웨어 설정
 app.use(session({
@@ -64,6 +83,7 @@ app.use(loggingMiddleware);
 import authRoutes from './server/Routes/authRoutes.js'; //폴더 경로
 import dashboardRoutes from './server/Routes/dashboardRoutes.js';
 import userRoutes from './server/Routes/userRoutes.js';
+
 
 
 app.use('/api/v1/auth',authRoutes);
