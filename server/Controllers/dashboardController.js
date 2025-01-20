@@ -1,5 +1,5 @@
 import { deletePostImage } from '../Service/ImageHandler.js';
-import { postsUpload } from '../Service/multerConfig.js';
+import {checkIP} from '../Service/View.js';
 import PostModel from '../Models/PostModel.js';
 import CommentModel from '../Models/CommentModel.js';
 import LikeModel from '../Models/LikeModel.js';
@@ -29,10 +29,10 @@ const dashboardController = {
         try {
             const posts = await PostModel.getPosts(offset, limit);
 
-            // // 데이터가 없는 경우 빈 배열 반환
-            // if (!posts || posts.length === 0) {
-            //     return res.status(200).json([]);
-            // }
+            // 데이터가 없는 경우 빈 배열 반환
+            if (!posts || posts.length === 0) {
+                return res.status(200).json([]);
+            }
 
             return res.status(200).json(posts);
 
@@ -55,6 +55,13 @@ const dashboardController = {
             if (!post) {
                 return res.status(404).json({ message: '게시글을 찾을 수 없습니다' });
             }
+
+            //FIXME : 조회수 증가 추가 + req.ip로는 ip주소 get x
+            /*
+            if(checkIP(ip_address,post_id)){
+                await PostModel.incrementView(post_id);
+            }*/
+
 
             return res.status(200).json({
                 post : post,

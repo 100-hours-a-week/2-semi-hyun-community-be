@@ -1,4 +1,3 @@
-import { readUser, writeUser, updateUser } from '../Service/SignUpJson.js';
 import UserModel from '../Models/UserModel.js';
 import bcrypt from 'bcrypt';
 import { v4 } from 'uuid';

@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import {deleteProfileImage} from '../Service/ImageHandler.js';
 import UserModel from '../Models/UserModel.js';
-import PostService from '../Service/PostService.js';
 
 const userController = {
     //이미지 조회
@@ -143,9 +142,6 @@ const userController = {
             if(user.profile_image){
                 await deleteProfileImage(user.profile_image);
             }
-
-            //사용자 관련 데이터 삭제
-            await PostService.deleteUserRelatedData(user_id);
 
             //사용자 삭제
             const result = await UserModel.deleteUser(user_id);
