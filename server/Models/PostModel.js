@@ -57,11 +57,22 @@ const PostModel = {
         }
     },
 
+    //조회수 증가
+    incrementView : async(post_id) => {
+        try{
+            const sql = `UPDATE SET post views += 1 WHERE post_id = ?`
+            const result = await query(sql,[post_id]);
+
+            return result.affectedRows > 0;
+
+        }catch(error){
+            throw error;
+        }
+    },
+
     //게시글 추가
     addPost : async({ title, content, user_id, imageFilename}) => {
         try{
-            // const sql = `INSERT INTO post (user_id, title, content, post_image, created_at, updated_at, views, likes, comments_count) 
-                        // VALUES (?, ?, ?, ?, NOW(), NOW(), 0, 0, 0)`;
             const sql = `INSERT INTO post (user_id, title, content, post_image) VALUES (?, ?, ?, ?)`;
             const values = [user_id, title, content, imageFilename ? imageFilename : null];
             const result = await query(sql,values);
@@ -143,8 +154,6 @@ const PostModel = {
         }
 
     },
-
-    //--권한 확인--
     //작성자 권한 확인
     //현재 user_id 와 post_id의 user_id를 비교해야한다.
     checkAuthorization: async(post_id, user_id) => {
