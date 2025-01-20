@@ -1,5 +1,4 @@
 import CommentModel from '../Models/CommentModel.js';
-import PostModel from '../Models/PostModel.js';
     
 const commentController = {
 
@@ -34,16 +33,15 @@ const commentController = {
 
         try {
             // 권한 확인
-            const isAuthorized = await PostModel.checkAuthorization(post_id, user_id, comment_id, 'comment');
+            const isAuthorized = await CommentModel.checkAuthorization(comment_id, user_id);
             if (!isAuthorized) {
-                return res.status(403).json({ message: '게시글 작성자만 수정할 수 있습니다.' });
+                return res.status(403).json({ message: '댓글 작성자만 수정할 수 있습니다.' });
             }
-
             if (!content) {
                 return res.status(400).json({ message: '내용을 입력해주세요.' });
             }
 
-            const post = await CommentModel.patchComment(post_id, comment_id, content);
+            const post = await CommentModel.patchComment(comment_id, user_id, content);
 
             if (!post) {
                 return res.status(404).json({ message: '댓글 수정을 실패했습니다.' });
@@ -66,9 +64,9 @@ const commentController = {
 
         try {
             // 권한 확인
-            const isAuthorized = await PostModel.checkAuthorization(post_id, user_id, comment_id, 'comment');
+            const isAuthorized = await CommentModel.checkAuthorization(comment_id, user_id);
             if (!isAuthorized) {
-                return res.status(403).json({ message: '게시글 작성자만 삭제할 수 있습니다.' });
+                return res.status(403).json({ message: '댓글 작성자만 삭제할 수 있습니다.' });
             }
 
             const post = await CommentModel.deleteComment(comment_id);

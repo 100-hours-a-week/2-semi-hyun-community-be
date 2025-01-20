@@ -41,18 +41,18 @@ const CommentModel = {
     },
 
     //댓글 수정
-    patchComment: async(post_id, user_id, content) => {
+    patchComment: async(comment_id, user_id, content) => {
         try{
             const sql = `UPDATE comment SET content =? 
-                         WHERE post_id = ? AND user_id =?`;
-            const values = [content, post_id, user_id];
+                         WHERE comment_id = ? AND user_id =?`;
+            const values = [content, comment_id, user_id];
 
             const result = await query(sql,values);
 
             return result.affectedRows > 0;
 
         }catch(error){
-            console.error('게시글 수정 오류:', error);
+            console.error('댓글 수정 오류:', error);
             throw error;
         }
     },
@@ -69,6 +69,23 @@ const CommentModel = {
 
         }catch(error){
             console.error('게시글 삭제 오류:', error);
+            throw error;
+        }
+    },
+
+
+    //--권한 확인--
+    //작성자 권한 확인
+    checkAuthorization: async(comment_id, user_id) => {
+        try{
+            const sql = 'SELECT COUNT(*) AS count FROM comment WHERE comment_id = ? AND user_id = ?';
+            const values = [comment_id, user_id];
+            const result = await query(sql,values);
+
+            return result[0].count>0;
+
+        }catch(error){
+            console.error('특정 댓글 조회 오류:', error);
             throw error;
         }
     }
