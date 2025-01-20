@@ -126,19 +126,18 @@ const UserModel = {
         try{
             //동적 SQL
             //1.기본 업데이트 쿼리
-            let sql = 'UPDATE user SET name = ?, updated_at = CURRENT_TIMESTAMP';
+            let sql = 'UPDATE user SET name = ?';
             const values = [userData.name];
 
             //2.profile_image가 존재하면 추가
-            if(userData.profile_image){
+            if(userData.image){
                 sql += `, profile_image = ?`;
-                values.push(userData.profile_image);
+                values.push(userData.image);
             }
 
             //3.where 추가
-            sql += `WHERE user_id = ?`;
+            sql += ` WHERE user_id = ?`;
             values.push(user_id);
-
             //4.쿼리 실행
             const result = await query(sql,values)
 

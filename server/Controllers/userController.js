@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import {profileUpload} from '../Service/multerConfig.js';
 import {deleteProfileImage} from '../Service/ImageHandler.js';
 import UserModel from '../Models/UserModel.js';
 import PostService from '../Service/PostService.js';
@@ -35,7 +34,7 @@ const userController = {
     // 회원정보 수정(닉네임,사진): 데이터 조회
     getEditUserData: async(req,res) => {
         try{   
-            const user_id = req.user.user_id;
+            const { user_id } = req.session.user;
             const user = await UserModel.getUserById(user_id);
 
             if(!user){
@@ -44,7 +43,7 @@ const userController = {
 
             return res.status(200).json({
                 //NOTE : MYSQL 쿼리 결과가 JS 객체로 자동 변환
-                data: { name: user.name, email: user.email, image:user.image},
+                data: { name: user.name, email: user.email, image:user.profile_image},
                 message: 'get user data success'
             });
         } catch(error){
@@ -54,9 +53,10 @@ const userController = {
     },
 
     //회원정보 수정 : 닉네임,사진
-    patchUserInfo: [profileUpload.single('image'),async(req,res) => {
-        const user_id = req.session.user.user_id; //user_id from session
-        const {name} = req.body;
+    patchUserInfo: async(req,res) => {
+        const { user_id } = req.session.user; //user_id from session
+        const { name} = req.body;
+        console.log('req.file:',req.file)
 
         try{
             //사진이 있을 경우
@@ -96,12 +96,12 @@ const userController = {
             console.error('사용자 정보 조회 중 오류 발생:', error);
             return res.status(500).json({message: '서버 오류가 발생했습니다.'});
         }
-    }],
+    },
 
     //회원정보 수정 : 패스워드
     patchPassword: async(req,res) => {
-        const user_id = req.user.user_id; //user_id from session
-        const {password} = req.body;
+        const { user_id } = req.session.user; //user_id from session
+        const { password } = req.body;
 
         try{
             if(!password){

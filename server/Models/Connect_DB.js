@@ -67,7 +67,7 @@ async function testDatabaseConnection() {
     }
 }
 
-export {query,testDatabaseConnection,testLog};
+export {pool,query,testDatabaseConnection,testLog};
 
 //NOTE: createConnection
 // 1. 매 요청마다(사용자 별로) 새로운 연결을 생성/종료

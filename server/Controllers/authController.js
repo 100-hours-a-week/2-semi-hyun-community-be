@@ -58,7 +58,7 @@ const authController = {
     
                 res.status(200).json({
                     message: '로그인을 성공했습니다.',
-                    data: { name: user.name, user_id: user.user_id }
+                    name : user.name,
                 });
             });
     
