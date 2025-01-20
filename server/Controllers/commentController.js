@@ -69,7 +69,7 @@ const commentController = {
                 return res.status(403).json({ message: '댓글 작성자만 삭제할 수 있습니다.' });
             }
 
-            const post = await CommentModel.deleteComment(comment_id);
+            const post = await CommentModel.deleteComment(post_id,comment_id);
 
             if (!post) {
                 return res.status(404).json({ message: '댓글이 존재하지 않습니다.' });
