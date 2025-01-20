@@ -13,14 +13,17 @@ router.get('/data', authMiddleware, dashboardController.getDashboardData);
 //게시글 추가
 router.post('/',authMiddleware,postsUpload.single('image'),dashboardController.postAddPost);
 
-//게시글 상세조회 - 데이터 조회 + 게시글 수정 - 데이터 조회
+//게시글 상세조회 - 데이터 조회
 router.get('/:post_id/data',authMiddleware,dashboardController.getPostData);
+
+//게시글 수정 - 데이터 조회
+router.get('/:post_id/edit-data',authMiddleware,dashboardController.getEditPostData);
 
 //게시글 권한 확인
 router.get('/:post_id/check',authMiddleware,dashboardController.checkAuthorization);
 
 //게시글 수정 요청
-router.patch('/:post_id',authMiddleware,dashboardController.patchEditPost);
+router.patch('/:post_id',authMiddleware,postsUpload.single('image'),dashboardController.patchEditPost);
 
 //게시글 삭제
 router.delete('/:post_id',authMiddleware,dashboardController.deletePost);

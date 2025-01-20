@@ -6,13 +6,19 @@ const PostModel = {
     //게시글 목록 조회
     getPosts : async(offset, limit) => {
         try{
-            const sql = `SELECT post.*, user.name 
-                        FROM post
-                        JOIN user
-                        ON post.user_id = user.user_id
-                        ORDER BY post.created_at DESC
-                        LIMIT ? OFFSET ?`;
+            // const sql = `SELECT post.title,post.content,post.post_image,post.created_at,post.views,post.likes,post.comments_count, user.name 
+            //             FROM post
+            //             JOIN user
+            //             ON post.user_id = user.user_id
+            //             ORDER BY post.created_at DESC
+            //             LIMIT ? OFFSET ?`;
 
+            const sql = `SELECT post.*, user.name, user.profile_image 
+            FROM post
+            JOIN user
+            ON post.user_id = user.user_id
+            ORDER BY post.created_at DESC
+            LIMIT ? OFFSET ?`;
             //문자열 -> 숫자로 변환
             const values = [Number(limit),Number(offset)];
 
@@ -33,7 +39,7 @@ const PostModel = {
             //가져와야할것
             // title,name,content,user_id,image,
             // const sql = 'SELECT * FROM post WHERE post_id = ?';
-            const sql = `SELECT post.*, user.name
+            const sql = `SELECT post.*, user.name, user.profile_image 
                         FROM post
                         JOIN user
                         ON post.user_id = user.user_id
@@ -41,9 +47,9 @@ const PostModel = {
                         
             const result = await query(sql,[post_id]);
 
-            console.log(result);
-            return result;
-            //FIXME : 조회수 증가
+            //배열 벗겨서 주기
+            return result[0];
+            
 
         }catch(error){
             console.error('특정 게시글 조회 오류:', error);
@@ -61,7 +67,7 @@ const PostModel = {
             const result = await query(sql,values);
 
             //결과 반환 -> respond data : post_id
-            return result;
+            return result.insertId;
 
         }catch(error){
             console.error('게시글 추가 오류:', error);
@@ -73,7 +79,7 @@ const PostModel = {
     patchPost : async(post_id, updatedData) => {
         try{
             //동적 SQL
-            const sql = `UPDATE post SET title =? content =?, updated_at = CURRENT_TIMESTAMP`;
+            let sql = `UPDATE post SET title = ?, content = ?`;
             const values = [updatedData.title, updatedData.content];
 
             if(updatedData.post_image){
@@ -81,7 +87,7 @@ const PostModel = {
                 values.push(updatedData.post_image);
             }
 
-            sql += `WHERE post_id = ?`
+            sql += ` WHERE post_id = ?`
             values.push(post_id);
 
             const result = await query(sql,values);
@@ -100,7 +106,7 @@ const PostModel = {
             const sql = `SELECT post_image FROM post WHERE post_id = ?`;
             const result = await query(sql,[post_id]);
 
-            return result.post_image;
+            return result[0].post_image;
 
         }catch(error){
             console.error('게시글 이미지 조회 오류:', error);
@@ -108,16 +114,46 @@ const PostModel = {
         }
     },
 
+    //게시글 삭제
+    deletePost: async (post_id) => {
+        try{
+            const sql = `DELETE FROM post WHERE post_id = ?`;
+            const result = await query(sql,[post_id]);
+
+            console.log(result.affectedRows);
+
+            return result.affectedRows > 0;
+
+        }catch(error){
+            console.error('게시글 삭제 오류:', error);
+            throw error;
+        }
+    },
+
+    //사진 삭제
+    updatePostImage : async(post_id) => {
+        try{
+            const sql = 'UPDATE post SET post_image=NULL WHERE post_id = ?';
+            const result = await query(sql,[post_id]);
+
+            return result.affectedRows >0;
+        }catch(error){
+            console.error('기존 사진 삭제 오류:', error);
+            throw error;
+        }
+
+    },
+
     //--권한 확인--
     //작성자 권한 확인
     //현재 user_id 와 post_id의 user_id를 비교해야한다.
     checkAuthorization: async(post_id, user_id) => {
         try{
-            const sql = 'SELECT COUNT(*) FROM post WHERE post_id = ? AND user_id = ?';
+            const sql = 'SELECT COUNT(*) AS count FROM post WHERE post_id = ? AND user_id = ?';
             const values = [post_id, user_id];
             const result = await query(sql,values);
 
-            return result.count>0;
+            return result[0].count>0;
 
         }catch(error){
             console.error('특정 게시글 조회 오류:', error);
