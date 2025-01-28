@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/login',authController.postLogin);
 
 //회원가입 처리 라우트 (POST)
-router.post('/signUp',profileUpload.single('image'),authController.postSignUp);
+router.post('/signup',profileUpload.single('image'),authController.postSignUp);
 
 //이메일 중복 체크 라우트 (POST)
 router.post('/check-email',authController.postCheckEmail);
