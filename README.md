@@ -1,28 +1,43 @@
-# 2-semi-hyun-community-be
-## 🍀1. 정리
-- [2-semi-hyun-community-fe](https://github.com/100-hours-a-week/2-semi-hyun-community-fe)
-- [2-semi-hyun-community-be](https://github.com/100-hours-a-week/2-semi-hyun-community-be)
+# 🏡 우당탕탕 커뮤니티
 
-## 🍀2. 스택
-Node.js, JavaScript
+우당탕탕 커뮤니티는 사용자들이 자유롭게 소통하고 의견을 공유할 수 있는 **커뮤니티 서비스**입니다.
 
-## 🍀3. 기능
-- 사용자 별 게시글 작성/수정/삭제 기능 구현
-- 게시글 댓글 기능을 통해 상호작용 가능
-- 나만의 닉네임을 가져봐요★
+## 🚀 프로젝트 개요
+### 📌 깃허브 레포지토리
+- **프론트엔드:** [🔗 링크](https://github.com/100-hours-a-week/2-semi-hyun-community-fe)
+- **백엔드:** [🔗 링크](https://github.com/100-hours-a-week/2-semi-hyun-community-be)
+
+### 🛠️ 기술 스택
+- **프론트엔드:** HTML, CSS, JavaScript
+- **백엔드:** Express.js, Node.js
+- **데이터베이스:** MySQL
+
+
+## 🔥 주요 기능
+### 🏠 회원 시스템
+- **회원가입 및 로그인:** 사용자는 계정을 생성하고 로그인하여 커뮤니티에 참여할 수 있습니다.
+- **닉네임 설정:** 자신만의 개성 있는 닉네임을 설정할 수 있습니다.
+
+### 📝 게시판 기능
+- **게시글 관리:** 사용자 별로 게시글을 작성, 수정, 삭제할 수 있습니다.
+- **댓글 시스템:** 게시글에 댓글을 남겨 상호작용할 수 있습니다.
+- **좋아요 기능:** 게시글에 공감할 수 있도록 좋아요를 누를 수 있습니다.
+
+### 🔒 보안
+- **세션/쿠키 기반 인증** 서버에 사용자 정보를 저장하고, 쿠키를 통해 인증 정보를 전달합니다.
   
-## 🍀4. 폴더구조
+##  📁 폴더구조 (back-end)
 ```
 2-semi-hyun-community-be
-├─ .gitignore
-├─ .vscode
-│  ├─ launch.json
-│  └─ settings.json
 ├─ app.js
 ├─ package-lock.json
 ├─ package.json
+├─ .gitignore
 ├─ README.md
 └─ server
+   ├─ config
+   │  ├─ express-config.js
+   │  └─ .env.example
    ├─ Controllers
    │  ├─ authController.js
    │  ├─ commentController.js
@@ -30,89 +45,61 @@ Node.js, JavaScript
    │  └─ userController.js
    ├─ data
    │  ├─ images
-   │  └─ json
-   │     ├─ login.json
-   │     └─ posts.json
+   │  │  └─ profile
    ├─ Middlewares
-   │  └─ authMiddleware.js
+   │  ├─ authMiddleware.js
+   │  └─ loggingMiddleware.js
    ├─ Models
+   │  ├─ CommentModel.js
+   │  ├─ Connect_DB.js
+   │  ├─ LikeModel.js
+   │  ├─ PostModel.js
+   │  └─ UserModel.js
    ├─ Routes
    │  ├─ authRoutes.js
    │  ├─ dashboardRoutes.js
    │  └─ userRoutes.js
    └─ Service
+      ├─ ImageHandler.js
       ├─ multerConfig.js
-      ├─ PostService.js
-      ├─ SignUpJson.js
-      ├─ TimeStamp.js
-      └─ UserService.js
+      └─ View.js
 
 ```
 
-## 🍀5. 파일구조
+## 📂 파일 구조
+
 ```mermaid
-graph TD
-    A[app.js] --> B[Routes]
-    A --> C[Middlewares]
-    
-    B --> D[authRoutes.js]
-    B --> E[dashboardRoutes.js] 
-    B --> F[userRoutes.js]
-    
-    D --> G[authController.js]
-    E --> H[dashboardController.js]
-    E --> I[commentController.js]
-    F --> J[userController.js]
-    
-    G --> K[Services]
-    H --> K
-    I --> K
-    J --> K
-    
-    K --> L[SignUpJson.js]
-    K --> M[PostService.js]
-    K --> N[UserService.js]
-    K --> O[multerConfig.js]
-    
-    L --> P[(JSON Files)]
-    M --> P
-    N --> P
-    O --> R[(Images)]
-    
-    C --> Q[authMiddleware.js]
-    Q --> D
-    Q --> E
-    Q --> F
-    
-    subgraph Storage
-    P
-    R
-    end
-    
-    subgraph "Images Directory"
-    R --> S[posts]
-    R --> T[profile]
-    end
-    
-    subgraph Services
-    K
-    end
-    
-    subgraph Controllers
-    G
-    H 
-    I
-    J
-    end
-    
-    subgraph Routes
-    D
-    E
-    F
-    end
+flowchart TD
+ subgraph Services["Services"]
+        P["multerConfig.js"]
+        Q["ImageHandler.js"]
+        R["View.js"]
+  end
+ subgraph Database["Database"]
+        S["Connect_DB.js"]
+  end
+ subgraph Config["Config"]
+        V["express-config.js"]
+  end
 
-    subgraph "Auth Flow"
-        Q --> U((Session Check))
-    end
-
+    A["app.js"] --> B["Routes"] & C["Middlewares"] & D["Models"] & V
+    B --> E["authRoutes.js"] & F["dashboardRoutes.js"] & G["userRoutes.js"]
+    E --> H["authController.js"]
+    F --> I["dashboardController.js"] & J["commentController.js"] & n2["Untitled Node"]
+    G --> K["userController.js"]
+    H --> L["UserModel.js"] & P
+    I --> M["PostModel.js"] & O["LikeModel.js"] & P & R
+    J --> N["CommentModel.js"]
+    K --> L & P & Q
+    L --> S
+    M --> S
+    N --> S
+    O --> S
+    C --> T["authMiddleware.js"]
+    T --> E & F & G
 ```
+
+## 📌 향후 개선 사항
+- **알림 시스템 추가** (댓글 및 좋아요 반응 알림 제공)
+- **싫어요 기능 추가** (게시글 좋아요/싫어요 기능 사용)
+- **관리자 페이지 도입** (게시글 관리 및 사용자 제어 기능)
