@@ -62,7 +62,9 @@ const userController = {
             if(req.file){
                 // 기존 프로필 삭제
                 const user = await UserModel.getUserById(user_id);
-                await deleteProfileImage(user.profile_image);
+                if(user.profile_image){
+                    await deleteProfileImage(user.profile_image);
+                }
             }
 
             //유저 정보 수정

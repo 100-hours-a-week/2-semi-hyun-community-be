@@ -9,6 +9,7 @@ const rootDir = path.resolve(__dirname,'../'); //NOTE: 절대경로로 해석 ->
 //프로필 이미지 삭제
 export const deleteProfileImage = async (profile_image) => {
     const imagePath = path.join(rootDir,'data/images/profile/',profile_image);
+    if(!profile_image) return;
     try{
         await fs.promises.unlink(imagePath);
     }catch(error){
