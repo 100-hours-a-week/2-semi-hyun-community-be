@@ -25,6 +25,18 @@
 
 ### 🔒 보안
 - **세션/쿠키 기반 인증** 서버에 사용자 정보를 저장하고, 쿠키를 통해 인증 정보를 전달합니다.
+
+### 📖 실행방법
+``` bash
+# 의존성 설치
+npm install
+
+# .env 파일 생성 
+# env.example 복사 후 db 정보 수정
+cp .env.example .env
+
+# app.js 실행
+node app.js
   
 ##  📁 폴더구조 (back-end)
 ```
