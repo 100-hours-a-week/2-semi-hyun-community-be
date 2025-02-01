@@ -27,15 +27,19 @@
 - **세션/쿠키 기반 인증** 서버에 사용자 정보를 저장하고, 쿠키를 통해 인증 정보를 전달합니다.
 
 ## 📖 실행방법
+**1. 의존성 설치**
 ``` bash
-# 의존성 설치
 npm install
-
-# .env 파일 생성 
-# env.example 복사 후 db 정보 수정
+```
+**2. .env 파일 생성**
+   1. config 디렉토리로 이동
+   2. env.example 복사 후 db 정보 수정
+``` bash
+cd server/config
 cp .env.example .env
-
-# app.js 실행
+```    
+**3. app.js 실행**
+``` bash
 node app.js
 ```
   
@@ -49,34 +53,12 @@ node app.js
 ├─ README.md
 └─ server
    ├─ config
-   │  ├─ express-config.js
-   │  └─ .env.example
    ├─ Controllers
-   │  ├─ authController.js
-   │  ├─ commentController.js
-   │  ├─ dashboardController.js
-   │  └─ userController.js
    ├─ data
-   │  ├─ images
-   │  │  └─ profile
    ├─ Middlewares
-   │  ├─ authMiddleware.js
-   │  └─ loggingMiddleware.js
    ├─ Models
-   │  ├─ CommentModel.js
-   │  ├─ Connect_DB.js
-   │  ├─ LikeModel.js
-   │  ├─ PostModel.js
-   │  └─ UserModel.js
    ├─ Routes
-   │  ├─ authRoutes.js
-   │  ├─ dashboardRoutes.js
-   │  └─ userRoutes.js
    └─ Service
-      ├─ ImageHandler.js
-      ├─ multerConfig.js
-      └─ View.js
-
 ```
 
 ## 📂 파일 구조
