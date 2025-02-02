@@ -165,7 +165,7 @@ const dashboardController = {
                     // 기존 이미지 삭제
                     const post_image = await PostModel.getPostImage(post_id);
                     if (post_image) {
-                    await deletePostImage(post_image);
+                        await deletePostImage(post_image);
                     }
 
                     //사진만 삭제 -> DB 업데이트
