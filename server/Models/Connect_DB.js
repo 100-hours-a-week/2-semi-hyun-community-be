@@ -2,7 +2,7 @@ import mysql from 'mysql2';
 import dotenv from 'dotenv'; 
 
 //환경변수 로드
-dotenv.config({ path: 'server/config/.env' });
+dotenv.config({ path: 'server/config/.env.production' });
 
 //DB 연결 풀 생성
 const pool = mysql.createPool({

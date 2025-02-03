@@ -6,7 +6,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-dotenv.config({ path: 'server/config/.env' });
+dotenv.config({ path: 'server/config/.env.production' });
 
 // ES 모듈에서 __dirname 사용하기 위한 설정
 const __filename = fileURLToPath(import.meta.url);
