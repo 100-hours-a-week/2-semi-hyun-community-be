@@ -1,21 +1,17 @@
 import mysql from 'mysql2';
 import dotenv from 'dotenv'; 
-import { join } from 'path';
 
 //환경변수 로드
-dotenv.config({path:join(process.cwd(), 'server', 'config', '.env')});
-
-//환경 변수 - DB 설정 가져오기
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_PROD, DB_PORT, DB_TEST } = process.env;
+dotenv.config({ path: 'server/config/.env' });
 
 //DB 연결 풀 생성
 const pool = mysql.createPool({
     connectionLimit: 10, // 필요에 따라 조정
-    host : DB_HOST,
-    user : DB_USER,
-    password : DB_PASSWORD,
-    database : DB_PROD,//[24.12.19]테스트 스키마 사용
-    port : DB_PORT
+    host : process.env.DB_HOST,
+    user : process.env.DB_USER,
+    password : process.env.DB_PASSWORD,
+    database : process.env.DB_PROD,//[24.12.19]테스트 스키마 사용
+    port : process.env.DB_PORT
 }).promise();
 
 //쿼리 실행 함수
@@ -33,23 +29,9 @@ const query = async(sql, values) => {
     }
 };
 
-const testLog = ()=> {
-    // 연결 설정 디버깅
-console.log(
-    join(process.cwd(), 'server', 'config', '.env'),
-    'DB Connection Config:', {
-    host: DB_HOST,
-    user: DB_USER,
-    database: DB_TEST,
-    port: DB_PORT
-    // password는 보안상 출력하지 않음
-});
-}
-
 // DB 연결 테스트
 async function testDatabaseConnection() {
     try {
-        // const results = await query('SELECT 1 + 1 AS solution');
         const results = await query('show tables');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         console.log('📦 Database Connection Test');
@@ -67,7 +49,7 @@ async function testDatabaseConnection() {
     }
 }
 
-export {pool,query,testDatabaseConnection,testLog};
+export {pool,query,testDatabaseConnection};
 
 //NOTE: createConnection
 // 1. 매 요청마다(사용자 별로) 새로운 연결을 생성/종료

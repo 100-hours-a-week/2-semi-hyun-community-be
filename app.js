@@ -1,23 +1,27 @@
 import express from 'express';
-import session from 'express-session';
 import dotenv from 'dotenv';
+import session from 'express-session';
 import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { PORT, CORS_OPTIONS } from './server/config/express-config.js';
 
-dotenv.config();
+dotenv.config({ path: 'server/config/.env' });
 
 // ES 모듈에서 __dirname 사용하기 위한 설정
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = PORT;
+const port = process.env.PORT;
 
 //cors 미들웨어 설정
-app.use(cors(CORS_OPTIONS));
+app.use(cors(
+  {
+    origin : process.env.CORS_ORIGIN,
+    credentials : true
+  }
+));
 
 //보안 미들웨어 설정
 app.use(helmet({
