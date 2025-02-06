@@ -55,7 +55,6 @@ const userController = {
     patchUserInfo: async(req,res) => {
         const { user_id } = req.session.user; //user_id from session
         const { name} = req.body;
-        console.log('req.file:',req.file)
 
         try{
             //사진이 있을 경우
@@ -70,7 +69,7 @@ const userController = {
             //유저 정보 수정
             const updated = await UserModel.patchUser(user_id,{
                 name,
-                image : req.file ? req.file.filename : undefined
+                image : req.file ? req.file.key : undefined
             });
 
             if(!updated){

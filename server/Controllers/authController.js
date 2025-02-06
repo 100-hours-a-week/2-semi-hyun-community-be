@@ -95,7 +95,7 @@ const authController = {
                 name,
                 email,
                 password: hashedPassword,
-                profile_image: req.file.filename,
+                profile_image: req.file.key,
             };
 
             await UserModel.addUser(userData);

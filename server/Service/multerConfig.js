@@ -10,7 +10,7 @@ const createMulter = (bucketFolder) => {
     return multer({
         storage: multerS3({
             s3: s3,
-            bucket: process.env.S3_BUCKET_NAME,
+            bucket: process.env.AWS_BUCKET_NAME,
             contentType: multerS3.AUTO_CONTENT_TYPE,
             acl: 'public-read', // CloudFront에서 접근 가능하도록 설정
             key: (req, file, cb) => {

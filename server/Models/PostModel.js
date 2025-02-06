@@ -6,13 +6,6 @@ const PostModel = {
     //게시글 목록 조회
     getPosts : async(offset, limit) => {
         try{
-            // const sql = `SELECT post.title,post.content,post.post_image,post.created_at,post.views,post.likes,post.comments_count, user.name 
-            //             FROM post
-            //             JOIN user
-            //             ON post.user_id = user.user_id
-            //             ORDER BY post.created_at DESC
-            //             LIMIT ? OFFSET ?`;
-
             const sql = `SELECT post.*, user.name, user.profile_image 
             FROM post
             JOIN user
@@ -36,9 +29,6 @@ const PostModel = {
     //특정 게시물 조회
     getPostById : async(post_id) => {
         try{
-            //가져와야할것
-            // title,name,content,user_id,image,
-            // const sql = 'SELECT * FROM post WHERE post_id = ?';
             const sql = `SELECT post.*, user.name, user.profile_image 
                         FROM post
                         JOIN user
@@ -60,8 +50,9 @@ const PostModel = {
     //조회수 증가
     incrementView : async(post_id) => {
         try{
-            const sql = `UPDATE SET post views += 1 WHERE post_id = ?`
+            const sql = `UPDATE post SET views = views + 1 WHERE post_id = ?`
             const result = await query(sql,[post_id]);
+
 
             return result.affectedRows > 0;
 

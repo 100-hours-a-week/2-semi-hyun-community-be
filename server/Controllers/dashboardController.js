@@ -75,34 +75,6 @@ const dashboardController = {
         }
     },
 
-     // 게시글 상세 조회 - 데이터 조회
-     getPostData: async (req, res) => {
-        const { post_id } = req.params;
-        const { user_id } = req.session.user;
-
-        try {
-            const post = await PostModel.getPostById(post_id);
-            const comment = await CommentModel.getComment(post_id);
-            const is_liked = await LikeModel.getLikeStatus(user_id,post_id);
-
-            if (!post) {
-                return res.status(404).json({ message: '게시글을 찾을 수 없습니다' });
-            }
-
-            //FIXME : 조회수 증가
-
-            return res.status(200).json({
-                post : post,
-                comment : comment,
-                is_liked : is_liked
-            });
-
-        } catch (error) {
-            console.error('Error fetching post data:', error);
-            return res.status(500).json({ message: 'internal_server_error' });
-        }
-    },
-
     //게시글 수정- 게시글 조회
     getEditPostData: async (req,res) => {
         const { post_id } = req.params;
@@ -140,7 +112,7 @@ const dashboardController = {
                 title,
                 content,
                 user_id,
-                imageFilename: req.file ? req.file.filename : undefined
+                imageFilename: req.file ? req.file.key : undefined
                 });
 
             return res.status(201).json({
@@ -179,7 +151,7 @@ const dashboardController = {
                 const post = await PostModel.patchPost(post_id, {
                     title,
                     content,
-                    post_image: req.file ? req.file.filename : undefined
+                    post_image: req.file ? req.file.key : undefined
                 });
 
                 if (!post) {
