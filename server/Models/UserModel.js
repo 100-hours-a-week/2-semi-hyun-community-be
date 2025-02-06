@@ -17,7 +17,7 @@ const UserModel = {
             ];
             const result = await query(sql, values);
 
-            console.log(result);
+            // console.log(result);
             //실제로 추가된 행이 있는지
             return result.affectedRows > 0;
         } catch (error) {

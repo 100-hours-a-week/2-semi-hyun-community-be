@@ -36,6 +36,16 @@ app.use(helmet({
     }
   },
 
+    //CSP 설정
+  contentSecurityPolicy : {
+    directives: {
+      "default-src" :process.env.CSP_DEFAULT_SRC.split(' '),
+      "script-src" :process.env.CSP_SCRIPT_SRC.split(' '),
+      "style-src" :process.env.CSP_STYLE_SRC.split(' '),
+      "img-src" :process.env.CSP_IMG_SRC.split(' '),
+    }
+  },
+
   // X-Frame-Options 설정
   frameguard :{
     action: "deny" //프레임에서 렌더링 완전 차단
