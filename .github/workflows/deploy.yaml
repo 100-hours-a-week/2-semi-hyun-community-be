@@ -1,0 +1,68 @@
+name : Deploy Backend to ECR & EC2
+
+on:
+  push:
+    branches:
+      - main 
+      - feature/*
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'deveopment' }}
+
+    steps:
+      - name : Checkout repo
+        uses : actions/checkout@v3
+
+      - name : Configure AWS CLI
+        uses : aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name : Login to Amazon ECR
+        run : |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+
+      - name : Determine environment
+        run: |
+          if [[ ${{ github.ref }} == refs/heads/main ]]; then
+            echo "NODE_ENV=production" >> $GITHUB_ENV
+            echo "DB_HOST=${{ secrets.DB_HOST_PROD }}" >> $GITHUB_ENV
+            echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN_PROD }}" >> $GITHUB_ENV
+
+          else
+            echo "NODE_ENV=development" >> $GITHUB_ENV
+            echo "DB_HOST=${{ secrets.DB_HOST_DEV }}" >> $GITHUB_ENV
+            echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN_DEV }}" >> $GITHUB_ENV
+          fi
+            echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+            echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> $GITHUB_ENV
+            echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+            echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> $GITHUB_ENV
+            echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+
+
+
+
+      - name : Build Docker image
+        run : |
+          docker build \
+            --build-arg NODE_ENV=$NODE_ENV \
+            -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG .
+          docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG \
+            ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NODE_ENV-latest
+
+      - name : Push Docker image to ECR
+        run : |
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NODE_ENV-latest
+
+          

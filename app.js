@@ -11,7 +11,6 @@ const env = process.env.NODE_ENV || 'development';
 
 dotenv.config({ path: `server/config/.env.${env}`});
 
-console.log('env:', env);
 
 // ES 모듈에서 __dirname 사용하기 위한 설정
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +18,7 @@ const __dirname = path.dirname(__filename);
 
 
 const app = express();
-const port = process.env.PORT;
+const port = 3000;
 
 //cors 미들웨어 설정
 app.use(cors(
@@ -33,22 +32,12 @@ app.use(cors(
 app.use(helmet({
 
   //CSP 설정
-  contentSecurityPolicy : {
+  contentSecurityPolicy: {
     directives: {
-      "default-src" :process.env.CSP_DEFAULT_SRC.split(' '),
-      "script-src" :process.env.CSP_SCRIPT_SRC.split(' '),
-      "style-src" :process.env.CSP_STYLE_SRC.split(' '),
-      "img-src" :process.env.CSP_IMG_SRC.split(' '),
-    }
-  },
-
-    //CSP 설정
-  contentSecurityPolicy : {
-    directives: {
-      "default-src" :process.env.CSP_DEFAULT_SRC.split(' '),
-      "script-src" :process.env.CSP_SCRIPT_SRC.split(' '),
-      "style-src" :process.env.CSP_STYLE_SRC.split(' '),
-      "img-src" :process.env.CSP_IMG_SRC.split(' '),
+      "default-src": ["'self'", "http://localhost:8081"],
+      "script-src": ["'self'", "'unsafe-inline'", "http://localhost:8081"], 
+      "style-src": ["'self'", "'unsafe-inline'", "http://localhost:8081"],
+      "img-src": ["'self'", "data:", "http://localhost:8081"]
     }
   },
 
@@ -59,14 +48,11 @@ app.use(helmet({
 
   noSniff : true, // MIME 타입 스니핑 방지
 
-  //
   crossOriginResourcePolicy: {
     policy: "cross-origin" // 프론트-백엔드 통신 허용
   }
 
 }));
-
-
 
 //json 파싱 미들웨어
 app.use(express.json());
@@ -83,7 +69,7 @@ app.use(session({
     cookie: { 
         secure: false,  // HTTPS에서만 쿠키를 사용할지 여부 (true는 HTTPS에서만 사용)
         httpOnly : true, // js로 쿠키 접근 금지
-        maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE,10) // 24시간, 문자열->숫자
+        maxAge: 86400000 // 24시간, 문자열->숫자
     }    
   }));
 

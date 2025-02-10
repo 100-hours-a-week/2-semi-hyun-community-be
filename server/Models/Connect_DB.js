@@ -15,7 +15,7 @@ const pool = mysql.createPool({
     user : process.env.DB_USER,
     password : process.env.DB_PASSWORD,
     database : process.env.DB_NAME,//[24.12.19]테스트 스키마 사용
-    port : process.env.DB_PORT
+    port : 3306
 }).promise();
 
 //쿼리 실행 함수
