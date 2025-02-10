@@ -2,7 +2,11 @@ import mysql from 'mysql2';
 import dotenv from 'dotenv'; 
 
 //환경변수 로드
-dotenv.config({ path: 'server/config/.env' });
+const env = process.env.NODE_ENV || 'development';
+
+dotenv.config({ path: `server/config/.env.${env}`});
+
+console.log('env:', env);
 
 //DB 연결 풀 생성
 const pool = mysql.createPool({

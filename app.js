@@ -6,11 +6,17 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-dotenv.config({ path: 'server/config/.env' });
+//환경변수 로드
+const env = process.env.NODE_ENV || 'development';
+
+dotenv.config({ path: `server/config/.env.${env}`});
+
+console.log('env:', env);
 
 // ES 모듈에서 __dirname 사용하기 위한 설정
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 const app = express();
 const port = process.env.PORT;
