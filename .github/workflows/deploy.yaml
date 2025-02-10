@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main 
-      - feature/*
+      - feature
 
 jobs:
   build-and-push:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -54,8 +55,8 @@ jobs:
             --build-arg AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \
             --build-arg CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
             --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
-
             -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG .
+
 
           docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG \
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NODE_ENV-latest
