@@ -57,8 +57,8 @@ jobs:
             --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
             -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG .
 
-          docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPO_NAME }}:$IMAGE_TAG \
-            ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPO_NAME}}:$NODE_ENV-latest
+          docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME}}:$IMAGE_TAG \
+            ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME}}:$NODE_ENV-latest
 
       - name : Push Docker image to ECR
         run : |
