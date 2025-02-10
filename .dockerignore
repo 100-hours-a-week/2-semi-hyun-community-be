@@ -8,3 +8,4 @@ Dockerfile
 *.md
 tests
 coverage
+archive
