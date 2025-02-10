@@ -9,7 +9,6 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'deveopment' }}
 
     steps:
       - name : Checkout repo
@@ -38,25 +37,26 @@ jobs:
             echo "DB_HOST=${{ secrets.DB_HOST_DEV }}" >> $GITHUB_ENV
             echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN_DEV }}" >> $GITHUB_ENV
           fi
-            echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-            echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-            echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> $GITHUB_ENV
-            echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
-            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> $GITHUB_ENV
             echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-
-
-
 
 
       - name : Build Docker image
         run : |
           docker build \
             --build-arg NODE_ENV=$NODE_ENV \
+            --build-arg DB_HOST=$DB_HOST \
+            --build-arg DB_USER=${{ secrets.DB_USER }} \
+            --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --build-arg DB_NAME=${{ secrets.DB_NAME }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \
+            --build-arg CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+            --build-arg SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
+
             -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG .
+
           docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG \
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NODE_ENV-latest
 
