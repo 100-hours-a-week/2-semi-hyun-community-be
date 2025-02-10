@@ -59,11 +59,6 @@ jobs:
           docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME}}:$IMAGE_TAG \
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME}}:$NODE_ENV-latest
 
-      - name : List files
-        run : |
-          pwd
-          ls -la
-
       - name : Push Docker image to ECR
         run : |
           docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG
